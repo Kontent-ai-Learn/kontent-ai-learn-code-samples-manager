@@ -1,3 +1,8 @@
+const { setupConfiguration } = require('../shared/utils/configuration');
+
 module.exports = async function(context) {
-    return `Hello CodeSamplesManager!`;
+    setupConfiguration();
+   
+    const codeSamplesList = context.bindingData.codeSamplesList;
+
 };
