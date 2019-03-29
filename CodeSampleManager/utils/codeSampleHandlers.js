@@ -63,5 +63,6 @@ function prepareCodeSampleItem(codename) {
 module.exports = {
     storeCodeSample,
     archiveCodeSample,
-    updateCodeSample
+    updateCodeSample,
+    prepareCodeSampleItem
 };
