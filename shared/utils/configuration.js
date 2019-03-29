@@ -1,7 +1,7 @@
 const keys = {
     kenticoProjectId: '',
     kenticoContentManagmentApiKey: ''
-}
+};
 
 const getEnvironmentVariable = (variableName, isTest) =>
     process.env[`${variableName}${isTest ? '.Test' : ''}`];
@@ -16,4 +16,4 @@ function setupConfiguration(test) {
 module.exports = {
     setupConfiguration,
     keys
-};   
+};

@@ -22,27 +22,27 @@ function prepareCodeSampleElements(codeFragment) {
     return [
         {
             element: {
-                codename: "code"
+                codename: 'code'
             },
-            value: codeFragment.code 
+            value: codeFragment.code
         },
         {
             element: {
-                codename: "programming_language"
+                codename: 'programming_language'
             },
-            value: [ 
-                { 
-                    codename: codeFragment.programmingLanguage 
-                } 
+            value: [
+                {
+                    codename: codeFragment.programmingLanguage
+                }
             ]
         },
         {
             element: {
-                codename: "platform"
+                codename: 'platform'
             },
-            value: [ 
-                { 
-                    codename: codeFragment.platform 
+            value: [
+                {
+                    codename: codeFragment.platform
                 }
             ]
         }
@@ -52,7 +52,7 @@ function prepareCodeSampleElements(codeFragment) {
 function prepareCodeSampleItem(codename) {
     return {
         type: {
-            codename: "code_sample"
+            codename: 'code_sample'
         },
         name: codename,
         // Delete when CM API v2 update content item end-point will be fixed and sitemap_locations will not be required
@@ -64,4 +64,4 @@ module.exports = {
     storeCodeSample,
     archiveCodeSample,
     updateCodeSample
-}
+};

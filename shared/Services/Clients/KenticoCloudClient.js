@@ -1,22 +1,22 @@
 const getContentManagementClient = require('../../utils/contentManagmentClient');
-const { DEFAULT_LANGUAGE_ID, ARCHIVE_STEP_ID} = require('../../utils/constants');
+const { DEFAULT_LANGUAGE_ID, ARCHIVE_STEP_ID } = require('../../utils/constants');
 
 async function getContentItemAsync(codename) {
-    return await getContentManagementClient()
+    await getContentManagementClient()
         .viewContentItem()
         .byItemCodename(codename)
         .toPromise();
 }
 
-async function createContentItemAsync(addedContentItem) { 
-    return await getContentManagementClient()
+async function createContentItemAsync(addedContentItem) {
+    await getContentManagementClient()
         .addContentItem()
         .withData(addedContentItem)
         .toPromise();
 }
 
 async function updateContentItemAsync(updatedContentItem, codename) {
-    return await getContentManagementClient()
+    await getContentManagementClient()
         .updateContentItem()
         .byItemCodename(codename)
         .withData(updatedContentItem)
@@ -24,7 +24,7 @@ async function updateContentItemAsync(updatedContentItem, codename) {
 }
 
 async function archiveContentItemVariantAsync(codename) {
-    return await getContentManagementClient()
+    await getContentManagementClient()
         .changeWorkflowStepOfLanguageVariant()
         .byItemCodename(codename)
         .byLanguageId(DEFAULT_LANGUAGE_ID)
@@ -33,7 +33,7 @@ async function archiveContentItemVariantAsync(codename) {
 }
 
 async function createNewContentItemVersionAsync(codename) {
-    return await getContentManagementClient()
+    await getContentManagementClient()
         .createNewVersionOfLanguageVariant()
         .byItemCodename(codename)
         .byLanguageId(DEFAULT_LANGUAGE_ID)
@@ -41,7 +41,7 @@ async function createNewContentItemVersionAsync(codename) {
 }
 
 async function upsertLanguageVariantAsync(codename, variant) {
-    return await getContentManagementClient()
+    await getContentManagementClient()
         .upsertLanguageVariant()
         .byItemCodename(codename)
         .byLanguageId(DEFAULT_LANGUAGE_ID)
@@ -49,8 +49,8 @@ async function upsertLanguageVariantAsync(codename, variant) {
         .toPromise();
 }
 
-async function viewLanguageVariantAsync (codename) {
-    return await getContentManagementClient()
+async function viewLanguageVariantAsync(codename) {
+    await getContentManagementClient()
         .viewLanguageVariant()
         .byItemCodename(codename)
         .byLanguageId(DEFAULT_LANGUAGE_ID)
@@ -58,7 +58,7 @@ async function viewLanguageVariantAsync (codename) {
 }
 
 async function unpublishLanguageVariantAsync(codename) {
-    return await getContentManagementClient()
+    await getContentManagementClient()
         .unpublishLanguageVariant()
         .byItemCodename(codename)
         .byLanguageId(DEFAULT_LANGUAGE_ID)
@@ -74,5 +74,4 @@ module.exports = {
     upsertLanguageVariantAsync,
     viewLanguageVariantAsync,
     unpublishLanguageVariantAsync
-}
-                
+};

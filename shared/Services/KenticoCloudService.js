@@ -9,7 +9,7 @@ async function createItemAsync(addedContentItem, codename, variant) {
 async function archiveItemVariantAsync(codename) {
     const isItemPublished = await isContentItemPublished(codename);
 
-    if(isItemPublished) {
+    if (isItemPublished) {
         await kenticoCloudClient.unpublishLanguageVariantAsync(codename);
     }
 
@@ -19,7 +19,7 @@ async function archiveItemVariantAsync(codename) {
 async function updateItemAsync(updatedContentItem, codename, variant) {
     const isItemPublished = await isContentItemPublished(codename);
 
-    if(isItemPublished) {
+    if (isItemPublished) {
         await kenticoCloudClient.createNewContentItemVersionAsync(codename);
     }
 
@@ -29,12 +29,12 @@ async function updateItemAsync(updatedContentItem, codename, variant) {
 
 async function isContentItemPublished(codename) {
     const item = await kenticoCloudClient.viewLanguageVariantAsync(codename);
-    
+
     return item.data.workflowStep.id === PUBLISHED_STEP_ID;
 }
 
-module.exports = { 
-    createItemAsync, 
-    archiveItemVariantAsync, 
-    updateItemAsync  
-}
+module.exports = {
+    createItemAsync,
+    archiveItemVariantAsync,
+    updateItemAsync
+};
