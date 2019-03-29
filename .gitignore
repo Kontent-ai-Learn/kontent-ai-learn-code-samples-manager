@@ -11,8 +11,17 @@ Publish
 *.Cache
 project.lock.json
 
+yarn-debug.log*
+yarn-error.log*
+
 /packages
 /TestResults
+
+dist/
+
+.idea/*
+!.idea/codeStyles
+.env
 
 /tools/NuGet.exe
 /App_Data
