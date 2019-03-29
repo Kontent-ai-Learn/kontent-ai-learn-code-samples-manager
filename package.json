@@ -1,0 +1,34 @@
+{
+  "name": "kentico-cloud-docs-samples-manager",
+  "version": "1.0.0",
+  "description": "Kentico Cloud documentation - Samples Manager",
+  "scripts": {
+    "test": "jest",
+    "eslint": "npx eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kentico/kentico-cloud-docs-samples-manager"
+  },
+  "author": "Kentico",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kentico/kentico-cloud-docs-samples-manager/issues"
+  },
+  "homepage": "https://github.com/Kentico/kentico-cloud-docs-samples-manager#readme",
+  "dependencies": {
+    "durable-functions": "^1.1.4",
+    "kentico-cloud-content-management": "^0.0.11",
+    "rxjs": "^6.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.13.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jest": "^22.2.2",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^23.6.0"
+  }
+}
