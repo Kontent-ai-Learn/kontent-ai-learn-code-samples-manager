@@ -1,8 +1,7 @@
 const { setupConfiguration } = require('../shared/utils/configuration');
 const {
-    storeCodeSample,
-    archiveCodeSample,
-    updateCodeSample
+    upsertCodeFragment,
+    archiveCodeFragment,
 } = require('./utils/codeSampleHandlers');
 
 module.exports = async function (context) {
@@ -13,15 +12,12 @@ module.exports = async function (context) {
     for (const codeFragment of codeFragments) {
         switch (codeFragment.status) {
             case 'added':
-                storeCodeSample(codeFragment);
-                break;
-
             case 'modified':
-                updateCodeSample(codeFragment);
+                await upsertCodeFragment(codeFragment);
                 break;
 
             case 'deleted':
-                archiveCodeSample(codeFragment.codename);
+                await archiveCodeFragment(codeFragment.codename);
                 break;
 
             default:

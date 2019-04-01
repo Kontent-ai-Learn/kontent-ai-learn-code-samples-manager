@@ -1,47 +1,59 @@
 const getContentManagementClient = require('../../utils/contentManagmentClient');
-const { DEFAULT_LANGUAGE_ID, ARCHIVE_STEP_ID } = require('../../utils/constants');
+const {
+    DEFAULT_LANGUAGE_ID,
+    ARCHIVE_STEP_ID,
+    DRAFT_STEP_ID
+} = require('../../utils/constants');
 
-async function getContentItemAsync(codename) {
-    await getContentManagementClient()
+function getContentItemAsync(codename) {
+    return getContentManagementClient()
         .viewContentItem()
         .byItemCodename(codename)
         .toPromise();
 }
 
-async function createContentItemAsync(addedContentItem) {
-    await getContentManagementClient()
+function createContentItemAsync(addedContentItem) {
+    return getContentManagementClient()
         .addContentItem()
         .withData(addedContentItem)
         .toPromise();
 }
 
-async function updateContentItemAsync(updatedContentItem, codename) {
-    await getContentManagementClient()
+function updateContentItemAsync(updatedContentItem, codename) {
+    return getContentManagementClient()
         .updateContentItem()
         .byItemCodename(codename)
         .withData(updatedContentItem)
         .toPromise();
 }
 
-async function archiveContentItemVariantAsync(codename) {
-    await getContentManagementClient()
-        .changeWorkflowStepOfLanguageVariant()
-        .byItemCodename(codename)
-        .byLanguageId(DEFAULT_LANGUAGE_ID)
-        .byWorkflowStepId(ARCHIVE_STEP_ID)
-        .toPromise();
+function archiveContentItemVariantAsync(codename) {
+    return changeWorkflowStepAsync(codename, ARCHIVE_STEP_ID);
 }
 
-async function createNewContentItemVersionAsync(codename) {
-    await getContentManagementClient()
+function changeContentItemVariantWorkflowStepToDraftAsync(codename) {
+    return changeWorkflowStepAsync(codename, DRAFT_STEP_ID);
+}
+
+function changeWorkflowStepAsync(codename, newWorkflowStepId) {
+    return getContentManagementClient()
+    .changeWorkflowStepOfLanguageVariant()
+    .byItemCodename(codename)
+    .byLanguageId(DEFAULT_LANGUAGE_ID)
+    .byWorkflowStepId(newWorkflowStepId)
+    .toPromise();
+}
+
+function createNewContentItemVersionAsync(codename) {
+    return getContentManagementClient()
         .createNewVersionOfLanguageVariant()
         .byItemCodename(codename)
         .byLanguageId(DEFAULT_LANGUAGE_ID)
         .toPromise();
 }
 
-async function upsertLanguageVariantAsync(codename, variant) {
-    await getContentManagementClient()
+function upsertLanguageVariantAsync(codename, variant) {
+    return getContentManagementClient()
         .upsertLanguageVariant()
         .byItemCodename(codename)
         .byLanguageId(DEFAULT_LANGUAGE_ID)
@@ -49,16 +61,16 @@ async function upsertLanguageVariantAsync(codename, variant) {
         .toPromise();
 }
 
-async function viewLanguageVariantAsync(codename) {
-    await getContentManagementClient()
+function viewLanguageVariantAsync(codename) {
+    return getContentManagementClient()
         .viewLanguageVariant()
         .byItemCodename(codename)
         .byLanguageId(DEFAULT_LANGUAGE_ID)
         .toPromise();
 }
 
-async function unpublishLanguageVariantAsync(codename) {
-    await getContentManagementClient()
+function unpublishLanguageVariantAsync(codename) {
+    return getContentManagementClient()
         .unpublishLanguageVariant()
         .byItemCodename(codename)
         .byLanguageId(DEFAULT_LANGUAGE_ID)
@@ -73,5 +85,6 @@ module.exports = {
     createNewContentItemVersionAsync,
     upsertLanguageVariantAsync,
     viewLanguageVariantAsync,
-    unpublishLanguageVariantAsync
+    unpublishLanguageVariantAsync,
+    changeContentItemVariantWorkflowStepToDraftAsync
 };

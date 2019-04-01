@@ -1,6 +1,8 @@
 const keys = {
     kenticoProjectId: '',
-    kenticoContentManagmentApiKey: ''
+    kenticoContentManagmentApiKey: '',
+    azureStorageAccount: '',
+    azureStorageAccessKey: ''
 };
 
 const getEnvironmentVariable = (variableName, isTest) =>
@@ -11,6 +13,8 @@ function setupConfiguration(test) {
 
     keys.kenticoProjectId = getEnvironmentVariable('KC.ProjectId', isTest);
     keys.kenticoContentManagmentApiKey = getEnvironmentVariable('KC.ContentManagmentApiKey', isTest);
+    keys.azureStorageAccount = getEnvironmentVariable('AZURE_STORAGE_ACCOUNT', isTest);
+    keys.azureStorageAccessKey = getEnvironmentVariable('AZURE_STORAGE_ACCESS_KEY', isTest);
 }
 
 module.exports = {
