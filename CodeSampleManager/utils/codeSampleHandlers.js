@@ -17,7 +17,7 @@ function prepareCodeSampleElements(codeFragment) {
             element: {
                 codename: 'code'
             },
-            value: codeFragment.code
+            value: codeFragment.content
         },
         {
             element: {
@@ -25,7 +25,7 @@ function prepareCodeSampleElements(codeFragment) {
             },
             value: [
                 {
-                    codename: codeFragment.programmingLanguage
+                    codename: codeFragment.language
                 }
             ]
         },

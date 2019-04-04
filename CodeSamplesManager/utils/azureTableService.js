@@ -1,7 +1,6 @@
 const azure = require('azure-storage');
 const { keys } = require('../../shared/utils/configuration');
 const { CODE_SAMPLES_CODENAMES_TABLE } = require('../../shared/utils/constants');
-const { getCodeSamplesCodename } = require('./processCodename')
 
 function createTable(tableService) {
     return new Promise((resolve, reject) => {
@@ -27,9 +26,9 @@ async function getAzureTableService() {
     return tableService;
 }
 
-function addCodenameToTable(codename) {
+function addCodenameToTable(codename, identifier) {
     const task = {
-        PartitionKey: { '_': getCodeSamplesCodename(codename) },
+        PartitionKey: { '_': identifier },
         RowKey: { '_': codename },
     }
 
@@ -51,9 +50,9 @@ function addCodenameToTable(codename) {
     });
 }
 
-function removeCodenameFromTable(codename) {
+function removeCodenameFromTable(codename, identifier) {
     const task = {
-        PartitionKey: { '_': getCodeSamplesCodename(codename) },
+        PartitionKey: { '_': identifier },
         RowKey: { '_': codename },
     }
 
@@ -75,10 +74,10 @@ function removeCodenameFromTable(codename) {
     });
 }
 
-function getAllCodenamesWithSameBase(codename) {
+function getCodenamesByIdentifier(identifier) {
     const query = new azure
         .TableQuery()
-        .where('PartitionKey eq ?', getCodeSamplesCodename(codename));
+        .where('PartitionKey eq ?', identifier);
 
     return new Promise(async (resolve, reject) => {
         try {
@@ -102,5 +101,5 @@ function getAllCodenamesWithSameBase(codename) {
 module.exports = {
     addCodenameToTable,
     removeCodenameFromTable,
-    getAllCodenamesWithSameBase
+    getCodenamesByIdentifier
 };

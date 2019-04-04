@@ -8,7 +8,7 @@ module.exports = async function (context) {
     setupConfiguration();
 
     const codeSamplesList = context.bindingData.codeSamplesList;
-    
+
     for (const codeSample of codeSamplesList) {
         switch (codeSample.status) {
             case 'added':
