@@ -12,34 +12,33 @@ async function archiveCodeFragment(codename) {
 }
 
 function prepareCodeSampleElements(codeFragment) {
+    const contentElement = {
+        element: {
+            codename: 'code'
+        },
+        value: codeFragment.content
+    };
+    const languageElement = prepareTaxonomyElement('programming_language', codeFragment.language);
+    const platformElement = prepareTaxonomyElement('platform', codeFragment.platform);
+
     return [
-        {
-            element: {
-                codename: 'code'
-            },
-            value: codeFragment.content
-        },
-        {
-            element: {
-                codename: 'programming_language'
-            },
-            value: [
-                {
-                    codename: codeFragment.language
-                }
-            ]
-        },
-        {
-            element: {
-                codename: 'platform'
-            },
-            value: [
-                {
-                    codename: codeFragment.platform
-                }
-            ]
-        }
+        contentElement,
+        languageElement,
+        platformElement
     ];
+}
+
+function prepareTaxonomyElement(elementCodename, valueCodename) {
+    return {
+        element: {
+            codename: elementCodename
+        },
+        value: [
+            {
+                codename: valueCodename
+            }
+        ]
+    }
 }
 
 function prepareCodeSampleItem(codename) {
