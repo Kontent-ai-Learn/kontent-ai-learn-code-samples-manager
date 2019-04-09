@@ -17,7 +17,7 @@ async function getAzureTableService() {
     const tableService = azure.createTableService(
         keys.azureStorageAccount,
         keys.azureStorageAccessKey,
-        'http://127.0.0.1:10002/devstoreaccount1'
+        keys.azureStorageEndpoint
     );
 
     await createTable(tableService);

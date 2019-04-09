@@ -1,9 +1,6 @@
 const kenticoCloudClient = require('./Clients/KenticoCloudClient');
-const {
-    PUBLISHED_STEP_ID,
-    LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE,
-    ARCHIVE_STEP_ID
-} = require('../utils/constants');
+const { LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE } = require('../utils/constants');
+const { keys } = require('../utils/configuration');
 
 async function createItemAsync(addedContentItem, codename, variant) {
     await kenticoCloudClient.createContentItemAsync(addedContentItem);
@@ -62,13 +59,13 @@ async function getContentItem(codename) {
 async function isContentItemPublished(codename) {
     const item = await kenticoCloudClient.viewLanguageVariantAsync(codename);
 
-    return item.data.workflowStep.id === PUBLISHED_STEP_ID;
+    return item.data.workflowStep.id === keys.publishedStepId;
 }
 
 async function isContentItemArchived(codename) {
     const item = await kenticoCloudClient.viewLanguageVariantAsync(codename);
 
-    return item.data.workflowStep.id === ARCHIVE_STEP_ID;
+    return item.data.workflowStep.id === keys.archivedStepId;
 }
 
 module.exports = {

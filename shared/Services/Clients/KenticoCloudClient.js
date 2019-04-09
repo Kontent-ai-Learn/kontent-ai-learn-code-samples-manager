@@ -1,9 +1,6 @@
 const getContentManagementClient = require('../../utils/contentManagmentClient');
-const {
-    DEFAULT_LANGUAGE_ID,
-    ARCHIVE_STEP_ID,
-    DRAFT_STEP_ID
-} = require('../../utils/constants');
+const { DEFAULT_LANGUAGE_ID } = require('../../utils/constants');
+const { keys } = require('../../utils/configuration');
 
 function getContentItemAsync(codename) {
     return getContentManagementClient()
@@ -28,11 +25,11 @@ function updateContentItemAsync(updatedContentItem, codename) {
 }
 
 function archiveContentItemVariantAsync(codename) {
-    return changeWorkflowStepAsync(codename, ARCHIVE_STEP_ID);
+    return changeWorkflowStepAsync(codename, keys.archivedStepId);
 }
 
 function changeContentItemVariantWorkflowStepToDraftAsync(codename) {
-    return changeWorkflowStepAsync(codename, DRAFT_STEP_ID);
+    return changeWorkflowStepAsync(codename, keys.draftStepId);
 }
 
 function changeWorkflowStepAsync(codename, newWorkflowStepId) {
