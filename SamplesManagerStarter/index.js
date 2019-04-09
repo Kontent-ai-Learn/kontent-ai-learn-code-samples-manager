@@ -1,10 +1,13 @@
 const df = require('durable-functions');
 
-module.exports = async function (context, req) {
+module.exports = async function (context, eventGridEvent) {
     const client = df.getClient(context);
-    const instanceId = await client.startNew(req.params.functionName, undefined, req.body);
+    const instanceId = await client.startNew(
+        'SamplesManagerOrchestrator',
+        undefined,
+        eventGridEvent.data.url);
 
     context.log(`Started orchestration with ID = '${instanceId}'.`);
 
-    return client.createCheckStatusResponse(context.bindingData.req, instanceId);
+    return client.createCheckStatusResponse(context.bindingData.eventGridEvent, instanceId);
 };

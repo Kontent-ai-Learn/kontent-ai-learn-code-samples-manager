@@ -65,4 +65,4 @@ function transformCodenamesToLinkItems(codenames) {
 module.exports = {
     upsertCodeSamples,
     archiveCodeSamples
-}
+};

@@ -27,12 +27,9 @@ async function getAzureTableService() {
 
 function addCodenameToTable(codename, identifier) {
     return new Promise(async (resolve, reject) => {
-        const task = {
-            PartitionKey: { '_': identifier },
-            RowKey: { '_': codename },
-        }
+        const task = prepareCodenameEntity(identifier, codename);
 
-        upsertCodenameEntity(resolve, reject, task);
+        await upsertCodenameEntity(resolve, reject, task);
     });
 }
 
@@ -46,14 +43,18 @@ async function upsertCodenameEntity(resolve, reject, task) {
     );
 }
 
-function removeCodenameFromTable(codename, identifier) {
-    return new Promise((resolve, reject) => {
-        const task = {
-            PartitionKey: { '_': identifier },
-            RowKey: { '_': codename },
-        }
+function prepareCodenameEntity(identifier, codename) {
+    return {
+        PartitionKey: { '_': identifier },
+        RowKey: { '_': codename },
+    };
+}
 
-        deleteCodenameEntity(resolve, reject, task);
+function removeCodenameFromTable(codename, identifier) {
+    return new Promise(async (resolve, reject) => {
+        const task = prepareCodenameEntity(identifier, codename);
+
+        await deleteCodenameEntity(resolve, reject, task);
     });
 }
 
@@ -76,12 +77,12 @@ function handleTableStorageError(resolve, reject, error) {
 }
 
 function getCodenamesByIdentifier(identifier) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         const query = new azure
             .TableQuery()
             .where('PartitionKey eq ?', identifier);
 
-        queryCodenamesEntities(resolve, reject, query);
+        await queryCodenamesEntities(resolve, reject, query);
     });
 }
 

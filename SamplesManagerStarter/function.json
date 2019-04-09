@@ -2,8 +2,8 @@
   "bindings": [
     {
       "authLevel": "anonymous",
-      "name": "req",
-      "type": "httpTrigger",
+      "name": "eventGridEvent",
+      "type": "eventGridTrigger",
       "direction": "in",
       "route": "orchestrators/{functionName}",
       "methods": ["post"]
