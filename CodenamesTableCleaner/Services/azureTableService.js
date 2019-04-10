@@ -1,7 +1,7 @@
 const azure = require('azure-storage');
 const {
     deleteCodenameEntity,
-    queryCodenamesEntities
+    queryCodenamesEntities,
 } = require('../../shared/Services/Clients/TableServiceClient');
 
 async function deleteAllEntities() {
@@ -28,5 +28,5 @@ function removeCodenameFromTable(rowKey, partitionKey) {
 }
 
 module.exports = {
-    deleteAllEntities
+    deleteAllEntities,
 };

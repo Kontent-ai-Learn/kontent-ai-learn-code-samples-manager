@@ -34,11 +34,11 @@ function changeContentItemVariantWorkflowStepToDraftAsync(codename) {
 
 function changeWorkflowStepAsync(codename, newWorkflowStepId) {
     return getContentManagementClient()
-    .changeWorkflowStepOfLanguageVariant()
-    .byItemCodename(codename)
-    .byLanguageId(DEFAULT_LANGUAGE_ID)
-    .byWorkflowStepId(newWorkflowStepId)
-    .toPromise();
+        .changeWorkflowStepOfLanguageVariant()
+        .byItemCodename(codename)
+        .byLanguageId(DEFAULT_LANGUAGE_ID)
+        .byWorkflowStepId(newWorkflowStepId)
+        .toPromise();
 }
 
 function createNewContentItemVersionAsync(codename) {
@@ -83,5 +83,5 @@ module.exports = {
     upsertLanguageVariantAsync,
     viewLanguageVariantAsync,
     unpublishLanguageVariantAsync,
-    changeContentItemVariantWorkflowStepToDraftAsync
+    changeContentItemVariantWorkflowStepToDraftAsync,
 };

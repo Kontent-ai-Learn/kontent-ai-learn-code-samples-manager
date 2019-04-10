@@ -70,5 +70,5 @@ async function isContentItemArchived(codename) {
 
 module.exports = {
     archiveItemVariantAsync,
-    upsertContentItemVariant
+    upsertContentItemVariant,
 };

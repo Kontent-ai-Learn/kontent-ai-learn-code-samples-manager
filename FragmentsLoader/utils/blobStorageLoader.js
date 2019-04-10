@@ -7,5 +7,5 @@ async function loadDataFromBlobStorage(url) {
 }
 
 module.exports = {
-    loadDataFromBlobStorage
+    loadDataFromBlobStorage,
 };

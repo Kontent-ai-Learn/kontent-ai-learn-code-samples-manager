@@ -38,5 +38,5 @@ function setupWorkflowStepsIds(isTest) {
 
 module.exports = {
     setupConfiguration,
-    keys
+    keys,
 };

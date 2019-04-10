@@ -1,7 +1,7 @@
 const { setupConfiguration } = require('../shared/utils/configuration');
 const {
     upsertCodeSamples,
-    archiveCodeSamples
+    archiveCodeSamples,
 } = require('./utils/codeSamplesHandlers');
 
 module.exports = async function (context) {

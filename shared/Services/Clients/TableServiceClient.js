@@ -20,7 +20,7 @@ function createTable(tableService) {
 function createTableIfNotExists(resolve, reject, tableService) {
     tableService.createTableIfNotExists(
         CODE_SAMPLES_CODENAMES_TABLE,
-        error => handleTableStorageError(resolve, reject, error)
+        error => handleTableStorageError(resolve, reject, error),
     );
 }
 
@@ -30,7 +30,7 @@ async function deleteCodenameEntity(resolve, reject, task) {
     tableService.deleteEntity(
         CODE_SAMPLES_CODENAMES_TABLE,
         task,
-        error => handleTableStorageError(resolve, reject, error)
+        error => handleTableStorageError(resolve, reject, error),
     );
 }
 
@@ -47,7 +47,7 @@ async function queryCodenamesEntities(resolve, reject, query) {
             }
 
             resolve(result.entries);
-        }
+        },
     );
 }
 
@@ -57,7 +57,7 @@ async function upsertCodenameEntity(resolve, reject, task) {
     tableService.insertOrReplaceEntity(
         CODE_SAMPLES_CODENAMES_TABLE,
         task,
-        error => handleTableStorageError(resolve, reject, error)
+        error => handleTableStorageError(resolve, reject, error),
     );
 }
 
@@ -70,9 +70,7 @@ function handleTableStorageError(resolve, reject, error) {
 }
 
 module.exports = {
-    getAzureTableService,
-    handleTableStorageError,
     deleteCodenameEntity,
     queryCodenamesEntities,
-    upsertCodenameEntity
+    upsertCodenameEntity,
 };

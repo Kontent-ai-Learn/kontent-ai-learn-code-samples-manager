@@ -2,7 +2,7 @@ const kenticoCloudService = require('../../shared/Services/KenticoCloudService')
 const {
     addCodenameToTable,
     getCodenamesByIdentifier,
-    removeCodenameFromTable
+    removeCodenameFromTable,
 } = require('./azureTableService');
 
 async function upsertCodeSamples(codeSample) {
@@ -14,7 +14,11 @@ async function upsertCodeSamples(codeSample) {
         const codeSamplesItem = prepareCodeSamplesItem(codeSamplesContentItemCodename);
         const codeSamplesVariantElements = prepareCodeSamplesElements(codenamesByIdentifier);
 
-        await kenticoCloudService.upsertContentItemVariant(codeSamplesItem, codeSamplesContentItemCodename, codeSamplesVariantElements);
+        await kenticoCloudService.upsertContentItemVariant(
+            codeSamplesItem,
+            codeSamplesContentItemCodename,
+            codeSamplesVariantElements,
+        );
     }
 }
 
@@ -31,11 +35,11 @@ async function archiveCodeSamples(codeSample) {
 function prepareCodeSamplesItem(identifier) {
     return {
         type: {
-            codename: 'code_samples'
+            codename: 'code_samples',
         },
         name: identifier,
         // Delete when CM API v2 update content item end-point will be fixed and sitemap_locations will not be required
-        sitemap_locations: []
+        sitemap_locations: [],
     };
 }
 
@@ -45,10 +49,10 @@ function prepareCodeSamplesElements(codenames) {
     return [
         {
             element: {
-                codename: 'code_samples'
+                codename: 'code_samples',
             },
-            value: linkedItems
-        }
+            value: linkedItems,
+        },
     ];
 }
 
@@ -64,5 +68,5 @@ function transformCodenamesToLinkItems(codenames) {
 
 module.exports = {
     upsertCodeSamples,
-    archiveCodeSamples
+    archiveCodeSamples,
 };

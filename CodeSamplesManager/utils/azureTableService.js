@@ -2,7 +2,7 @@ const azure = require('azure-storage');
 const {
     upsertCodenameEntity,
     deleteCodenameEntity,
-    queryCodenamesEntities
+    queryCodenamesEntities,
 } = require('../../shared/Services/Clients/TableServiceClient');
 
 function addCodenameToTable(codename, identifier) {
@@ -47,5 +47,5 @@ function prepareCodenameEntity(identifier, codename) {
 module.exports = {
     addCodenameToTable,
     removeCodenameFromTable,
-    getCodenamesByIdentifier
+    getCodenamesByIdentifier,
 };
