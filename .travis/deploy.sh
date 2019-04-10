@@ -11,7 +11,8 @@ prepare_site_dir() {
         CodeSamplesManager
         SamplesManagerOrchestrator
         SamplesManagerStarter
-        kcd-search-service-update
+        CodenamesTableCleaner
+        FragmentsLoader
         shared
         extensions.csproj
         host.json
