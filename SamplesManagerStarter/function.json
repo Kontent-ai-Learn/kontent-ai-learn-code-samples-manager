@@ -1,17 +1,9 @@
 {
   "bindings": [
     {
-      "authLevel": "anonymous",
       "name": "eventGridEvent",
       "type": "eventGridTrigger",
-      "direction": "in",
-      "route": "orchestrators/{functionName}",
-      "methods": ["post"]
-    },
-    {
-      "name": "$return",
-      "type": "http",
-      "direction": "out"
+      "direction": "in"
     },
     {
       "name": "starter",
