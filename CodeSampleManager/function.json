@@ -1,0 +1,9 @@
+{
+  "bindings": [
+    {
+      "name": "codeSamples",
+      "type": "activityTrigger",
+      "direction": "in"
+    }
+  ]
+}
