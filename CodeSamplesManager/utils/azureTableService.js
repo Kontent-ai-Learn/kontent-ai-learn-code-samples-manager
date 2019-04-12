@@ -2,25 +2,33 @@ const azure = require('azure-storage');
 const tableServiceClient = require('../../shared/Services/Clients/TableServiceClient');
 
 function upsertCodeSampleInfoAsync(codename, identifier) {
-    return new Promise(async (resolve, reject) => {
-        const codeSampleInfo = prepareCodeSampleInfo(identifier, codename);
-
-        await tableServiceClient.upsertCodeSampleInfoAsync(resolve, reject, codeSampleInfo);
-    });
+    return executeCodeSampleInfoModification(
+        codename,
+        identifier,
+        tableServiceClient.upsertCodeSampleInfoAsync,
+    );
 }
 
-function removeCodeSampleInfoAsync(codename, identifier) {
-    return new Promise(async (resolve, reject) => {
-        const codeSampleInfo = prepareCodeSampleInfo(identifier, codename);
-
-        await tableServiceClient.deleteCodeSampleInfoAsync(resolve, reject, codeSampleInfo);
-    });
+function deleteCodeSampleInfoAsync(codename, identifier) {
+    return executeCodeSampleInfoModification(
+        codename,
+        identifier,
+        tableServiceClient.deleteCodeSampleInfoAsync,
+    )
 }
 
 async function queryCodeSampleInfoAsync(identifier) {
     const codeSampleInfoEntities = await executeQueryCodeSampleInfo(identifier);
 
     return codeSampleInfoEntities.map(entity => entity.RowKey['_']);
+}
+
+function executeCodeSampleInfoModification(codename, identifier, modificationFunction) {
+    return new Promise(async (resolve, reject) => {
+        const codeSampleInfo = prepareCodeSampleInfo(identifier, codename);
+
+        await modificationFunction(resolve, reject, codeSampleInfo);
+    });
 }
 
 function executeQueryCodeSampleInfo(identifier) {
@@ -42,6 +50,6 @@ function prepareCodeSampleInfo(identifier, codename) {
 
 module.exports = {
     upsertCodeSampleInfoAsync,
-    removeCodeSampleInfoAsync,
+    removeCodeSampleInfoAsync: deleteCodeSampleInfoAsync,
     queryCodeSampleInfoAsync,
 };

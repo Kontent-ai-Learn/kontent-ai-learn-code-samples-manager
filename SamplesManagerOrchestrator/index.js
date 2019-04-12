@@ -3,18 +3,17 @@ const { configVariables, setupConfiguration } = require('../shared/config/config
 
 module.exports = df.orchestrator(function * (context) {
     setupConfiguration();
+
     const CHUNK_SIZE = configVariables.chunkSize;
     const blobStorageUrl = context.bindingData.input;
 
     const blobStorageData = yield context.df.callActivity('PrepareCodeFragments', blobStorageUrl);
-    const syncMode = blobStorageData.mode;
-    const blobStorageFragments = blobStorageData.codeFragments;
 
-    if (syncMode === 'initialize') {
+    if (blobStorageData.mode === 'initialize') {
         yield context.df.callActivity('CleanCodeSampleInfo');
     }
 
-    for (const codeFragmentsByIdentifier of blobStorageFragments) {
+    for (const codeFragmentsByIdentifier of blobStorageData.codeFragments) {
         for (let i = 0; i < codeFragmentsByIdentifier.length; i = i + CHUNK_SIZE) {
             const codeFragmentsChunk = codeFragmentsByIdentifier.slice(i, i + CHUNK_SIZE);
 
