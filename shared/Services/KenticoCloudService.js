@@ -1,6 +1,6 @@
 const kenticoCloudClient = require('./Clients/KenticoCloudClient');
 const { LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE } = require('../utils/constants');
-const { keys } = require('../utils/configuration');
+const { configVariables } = require('../config/configuration');
 
 async function createItemAsync(addedContentItem, codename, variant) {
     await kenticoCloudClient.createContentItemAsync(addedContentItem);
@@ -23,12 +23,13 @@ async function archiveItemVariantAsync(codename) {
 
 async function updateItemAsync(updatedContentItem, codename, variant) {
     const isItemPublished = await isContentItemPublished(codename);
+    const isItemArchived = await isContentItemArchived(codename);
 
     if (isItemPublished) {
         await kenticoCloudClient.createNewContentItemVersionAsync(codename);
     }
 
-    if (isContentItemArchived) {
+    if (isItemArchived) {
         await kenticoCloudClient.changeContentItemVariantWorkflowStepToDraftAsync(codename);
     }
 
@@ -53,19 +54,21 @@ async function getContentItem(codename) {
         if (error.errorCode === LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE) {
             return null;
         }
+
+        throw error;
     }
 }
 
 async function isContentItemPublished(codename) {
     const item = await kenticoCloudClient.viewLanguageVariantAsync(codename);
 
-    return item.data.workflowStep.id === keys.publishedStepId;
+    return item.data.workflowStep.id === configVariables.publishedStepId;
 }
 
 async function isContentItemArchived(codename) {
     const item = await kenticoCloudClient.viewLanguageVariantAsync(codename);
 
-    return item.data.workflowStep.id === keys.archivedStepId;
+    return item.data.workflowStep.id === configVariables.archivedStepId;
 }
 
 module.exports = {
