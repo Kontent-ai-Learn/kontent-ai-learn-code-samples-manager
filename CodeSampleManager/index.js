@@ -1,12 +1,9 @@
-const { setupConfiguration } = require('../shared/utils/configuration');
 const {
     upsertCodeFragment,
     archiveCodeFragment,
 } = require('./utils/codeSampleHandlers');
 
 module.exports = async function (context) {
-    setupConfiguration();
-
     const codeFragments = context.bindingData.codeSamples;
 
     for (const codeFragment of codeFragments) {

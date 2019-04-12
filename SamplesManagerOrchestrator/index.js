@@ -1,7 +1,9 @@
 const df = require('durable-functions');
+const { configVariables, setupConfiguration } = require('../shared/config/configuration');
 
 module.exports = df.orchestrator(function * (context) {
-    const CHUNK_SIZE = 10;
+    setupConfiguration();
+    const CHUNK_SIZE = configVariables.chunkSize;
     const blobStorageUrl = context.bindingData.input;
 
     const blobStorageData = yield context.df.callActivity('FragmentsLoader', blobStorageUrl);
