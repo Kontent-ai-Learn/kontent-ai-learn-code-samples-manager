@@ -1,32 +1,32 @@
 const kenticoCloudService = require('../../shared/Services/KenticoCloudService');
 const {
-    addCodenameToTable,
-    getCodenamesByIdentifier,
-    removeCodenameFromTable,
+    upsertCodeSampleInfoAsync,
+    queryCodeSampleInfoAsync,
+    removeCodeSampleInfoAsync,
 } = require('./azureTableService');
 
-async function updateCodeSamplesContentItemInKenticoCloud(codeSample) {
-    const codenamesByIdentifier = await getCodenamesByIdentifier(codeSample.identifier);
+async function updateCodeSamplesItemAsync(codeSample) {
+    const codeSamplesLinkedItems = await queryCodeSampleInfoAsync(codeSample.identifier);
 
-    if (codenamesByIdentifier.length > 1) {
-        upsertCodeSamples(codeSample, codenamesByIdentifier);
+    if (codeSamplesLinkedItems.length > 1) {
+        await upsertCodeSamplesVariantAsync(codeSample, codeSamplesLinkedItems);
     }
 
-    if (codenamesByIdentifier.length === 0) {
-        archiveCodeSamples(codeSample);
+    if (codeSamplesLinkedItems.length === 0) {
+        await archiveCodeSamplesVariantAsync(codeSample);
     }
 }
 
-async function updateCodeSamplesCodenamesTable(codeSamplesList) {
+async function updateCodeSampleInfoAsync(codeSamplesList) {
     for (const codeSample of codeSamplesList) {
         switch (codeSample.status) {
             case 'added':
             case 'modified':
-                await addCodenameToTable(codeSample.codename, codeSample.identifier);
+                await upsertCodeSampleInfoAsync(codeSample.codename, codeSample.identifier);
                 break;
 
             case 'deleted':
-                await removeCodenameFromTable(codeSample.codename, codeSample.identifier);
+                await removeCodeSampleInfoAsync(codeSample.codename, codeSample.identifier);
                 break;
 
             default:
@@ -35,19 +35,19 @@ async function updateCodeSamplesCodenamesTable(codeSamplesList) {
     }
 }
 
-async function upsertCodeSamples(codeSample, codenamesByIdentifier) {
+async function upsertCodeSamplesVariantAsync(codeSample, codenamesByIdentifier) {
     const codeSamplesContentItemCodename = codeSample.identifier;
     const codeSamplesItem = prepareCodeSamplesItem(codeSamplesContentItemCodename);
-    const codeSamplesVariantElements = prepareCodeSamplesElements(codenamesByIdentifier);
+    const codeSamplesVariant = prepareCodeSamplesVariant(codenamesByIdentifier);
 
     await kenticoCloudService.upsertContentItemVariant(
         codeSamplesItem,
         codeSamplesContentItemCodename,
-        codeSamplesVariantElements,
+        codeSamplesVariant,
     );
 }
 
-async function archiveCodeSamples(codeSample) {
+async function archiveCodeSamplesVariantAsync(codeSample) {
     const codeSamplesContentItemCodename = codeSample.identifier;
     await kenticoCloudService.archiveItemVariantAsync(codeSamplesContentItemCodename);
 }
@@ -63,7 +63,7 @@ function prepareCodeSamplesItem(identifier) {
     };
 }
 
-function prepareCodeSamplesElements(codenames) {
+function prepareCodeSamplesVariant(codenames) {
     const linkedItems = transformCodenamesToLinkItems(codenames);
 
     return [
@@ -87,6 +87,6 @@ function transformCodenamesToLinkItems(codenames) {
 }
 
 module.exports = {
-    updateCodeSamplesCodenamesTable,
-    updateCodeSamplesContentItemInKenticoCloud,
+    updateCodeSampleInfoAsync,
+    updateCodeSamplesItemAsync,
 };
