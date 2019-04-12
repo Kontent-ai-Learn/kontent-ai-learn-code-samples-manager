@@ -5,15 +5,15 @@ const {
     removeCodeSampleInfoAsync,
 } = require('./azureTableService');
 
-async function updateCodeSamplesItemAsync(codeSample) {
-    const codeSamplesLinkedItems = await queryCodeSampleInfoAsync(codeSample.identifier);
+async function updateCodeSamplesItemAsync(codeSampleItemCodename) {
+    const codeSamplesLinkedItems = await queryCodeSampleInfoAsync(codeSampleItemCodename);
 
     if (codeSamplesLinkedItems.length > 1) {
-        await upsertCodeSamplesVariantAsync(codeSample, codeSamplesLinkedItems);
+        await upsertCodeSamplesVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems);
     }
 
     if (codeSamplesLinkedItems.length === 0) {
-        await archiveCodeSamplesVariantAsync(codeSample);
+        await archiveCodeSamplesVariantAsync(codeSampleItemCodename);
     }
 }
 
@@ -35,21 +35,19 @@ async function updateCodeSampleInfoAsync(codeSamplesList) {
     }
 }
 
-async function upsertCodeSamplesVariantAsync(codeSample, codenamesByIdentifier) {
-    const codeSamplesContentItemCodename = codeSample.identifier;
-    const codeSamplesItem = prepareCodeSamplesItem(codeSamplesContentItemCodename);
-    const codeSamplesVariant = prepareCodeSamplesVariant(codenamesByIdentifier);
+async function upsertCodeSamplesVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems) {
+    const codeSamplesItem = prepareCodeSamplesItem(codeSampleItemCodename);
+    const codeSamplesVariant = prepareCodeSamplesVariant(codeSamplesLinkedItems);
 
     await kenticoCloudService.upsertContentItemVariant(
         codeSamplesItem,
-        codeSamplesContentItemCodename,
+        codeSampleItemCodename,
         codeSamplesVariant,
     );
 }
 
-async function archiveCodeSamplesVariantAsync(codeSample) {
-    const codeSamplesContentItemCodename = codeSample.identifier;
-    await kenticoCloudService.archiveItemVariantAsync(codeSamplesContentItemCodename);
+async function archiveCodeSamplesVariantAsync(codeSampleItemCodename) {
+    await kenticoCloudService.archiveItemVariantAsync(codeSampleItemCodename);
 }
 
 function prepareCodeSamplesItem(identifier) {
@@ -77,13 +75,7 @@ function prepareCodeSamplesVariant(codenames) {
 }
 
 function transformCodenamesToLinkItems(codenames) {
-    let result = [];
-
-    for (const index in codenames) {
-        result = [...result, { codename: codenames[index] }];
-    }
-
-    return result;
+    return codenames.map(codename => ({ codename }));
 }
 
 module.exports = {
