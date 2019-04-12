@@ -5,8 +5,11 @@ const {
 
 module.exports = async function (context) {
     const codeSamplesList = context.bindingData.codeSamplesList;
-    const codeSample = codeSamplesList[0];
 
-    await updateCodeSampleInfoAsync(codeSamplesList);
-    await updateCodeSamplesItemAsync(codeSample);
+    if (codeSamplesList.length !== 0) {
+        const codeSamplesItemCodename = codeSamplesList[0].identifier;
+
+        await updateCodeSampleInfoAsync(codeSamplesList);
+        await updateCodeSamplesItemAsync(codeSamplesItemCodename);
+    }
 };
