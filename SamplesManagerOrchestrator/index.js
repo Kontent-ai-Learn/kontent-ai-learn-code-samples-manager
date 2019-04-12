@@ -6,12 +6,12 @@ module.exports = df.orchestrator(function * (context) {
     const CHUNK_SIZE = configVariables.chunkSize;
     const blobStorageUrl = context.bindingData.input;
 
-    const blobStorageData = yield context.df.callActivity('FragmentsLoader', blobStorageUrl);
+    const blobStorageData = yield context.df.callActivity('PrepareCodeFragments', blobStorageUrl);
     const syncMode = blobStorageData.mode;
     const blobStorageFragments = blobStorageData.codeFragments;
 
     if (syncMode === 'initialize') {
-        yield context.df.callActivity('CodenamesTableCleaner');
+        yield context.df.callActivity('CleanCodeSampleInfo');
     }
 
     for (const codeFragmentsByIdentifier of blobStorageFragments) {

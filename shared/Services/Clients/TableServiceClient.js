@@ -1,6 +1,6 @@
 const azure = require('azure-storage');
 const { configVariables } = require('../../config/configuration');
-const { CODE_SAMPLES_CODENAMES_TABLE } = require('../../utils/constants');
+const { CODE_SAMPLE_INFO_TABLE } = require('../../utils/constants');
 
 async function getAzureTableService() {
     const tableService = azure.createTableService(
@@ -19,7 +19,7 @@ function createTable(tableService) {
 
 function createTableIfNotExists(resolve, reject, tableService) {
     tableService.createTableIfNotExists(
-        CODE_SAMPLES_CODENAMES_TABLE,
+        CODE_SAMPLE_INFO_TABLE,
         error => handleTableStorageError(resolve, reject, error),
     );
 }
@@ -28,7 +28,7 @@ async function deleteCodenameEntity(resolve, reject, task) {
     const tableService = await getAzureTableService();
 
     tableService.deleteEntity(
-        CODE_SAMPLES_CODENAMES_TABLE,
+        CODE_SAMPLE_INFO_TABLE,
         task,
         error => handleTableStorageError(resolve, reject, error),
     );
@@ -38,7 +38,7 @@ async function queryCodenamesEntities(resolve, reject, query) {
     const tableService = await getAzureTableService();
 
     tableService.queryEntities(
-        CODE_SAMPLES_CODENAMES_TABLE,
+        CODE_SAMPLE_INFO_TABLE,
         query,
         null,
         (error, result) => {
@@ -55,7 +55,7 @@ async function upsertCodenameEntity(resolve, reject, task) {
     const tableService = await getAzureTableService();
 
     tableService.insertOrReplaceEntity(
-        CODE_SAMPLES_CODENAMES_TABLE,
+        CODE_SAMPLE_INFO_TABLE,
         task,
         error => handleTableStorageError(resolve, reject, error),
     );

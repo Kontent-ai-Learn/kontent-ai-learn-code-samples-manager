@@ -11,8 +11,8 @@ prepare_site_dir() {
         CodeSamplesManager
         SamplesManagerOrchestrator
         SamplesManagerStarter
-        CodenamesTableCleaner
-        FragmentsLoader
+        CleanCodeSampleInfo
+        PrepareCodeFragments
         shared
         extensions.csproj
         host.json
