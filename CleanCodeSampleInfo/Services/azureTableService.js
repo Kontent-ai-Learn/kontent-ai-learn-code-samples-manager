@@ -1,7 +1,7 @@
 const azure = require('azure-storage');
 const {
-    deleteCodenameEntity,
-    queryCodenamesEntities,
+    deleteCodeSampleInfoAsync,
+    queryCodeSampleInfoAsync,
 } = require('../../shared/Services/Clients/TableServiceClient');
 
 async function deleteAllEntities() {
@@ -13,7 +13,7 @@ async function deleteAllEntities() {
 }
 
 function getAllEntities() {
-    return new Promise((resolve, reject) => queryCodenamesEntities(resolve, reject, new azure.TableQuery()));
+    return new Promise((resolve, reject) => queryCodeSampleInfoAsync(resolve, reject, new azure.TableQuery()));
 }
 
 function removeCodenameFromTable(rowKey, partitionKey) {
@@ -23,7 +23,7 @@ function removeCodenameFromTable(rowKey, partitionKey) {
             RowKey: rowKey,
         };
 
-        await deleteCodenameEntity(resolve, reject, task);
+        await deleteCodeSampleInfoAsync(resolve, reject, task);
     });
 }
 

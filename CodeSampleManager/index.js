@@ -1,20 +1,20 @@
 const {
-    upsertCodeFragment,
-    archiveCodeFragment,
+    upsertCodeSampleVariantAsync,
+    archiveCodeSampleAsync,
 } = require('./utils/codeSampleHandlers');
 
 module.exports = async function (context) {
-    const codeFragments = context.bindingData.codeSamples;
+    const codeFragments = context.bindingData.codeFragments;
 
     for (const codeFragment of codeFragments) {
         switch (codeFragment.status) {
             case 'added':
             case 'modified':
-                await upsertCodeFragment(codeFragment);
+                await upsertCodeSampleVariantAsync(codeFragment);
                 break;
 
             case 'deleted':
-                await archiveCodeFragment(codeFragment.codename);
+                await archiveCodeSampleAsync(codeFragment.codename);
                 break;
 
             default:

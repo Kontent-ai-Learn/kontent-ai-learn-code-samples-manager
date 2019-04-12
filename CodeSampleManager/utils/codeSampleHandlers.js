@@ -1,21 +1,21 @@
 const kenticoCloudService = require('../../shared/Services/KenticoCloudService');
 
-async function upsertCodeFragment(codeFragment) {
+async function upsertCodeSampleVariantAsync(codeFragment) {
     const codeSampleItem = prepareCodeSampleItem(codeFragment.codename);
-    const codeSampleVariantElements = prepareCodeSampleElements(codeFragment);
+    const codeSampleVariant = prepareCodeSampleVariant(codeFragment);
 
     await kenticoCloudService.upsertContentItemVariant(
         codeSampleItem,
         codeFragment.codename,
-        codeSampleVariantElements,
+        codeSampleVariant,
     );
 }
 
-async function archiveCodeFragment(codename) {
+async function archiveCodeSampleAsync(codename) {
     await kenticoCloudService.archiveItemVariantAsync(codename);
 }
 
-function prepareCodeSampleElements(codeFragment) {
+function prepareCodeSampleVariant(codeFragment) {
     const contentElement = {
         element: {
             codename: 'code',
@@ -57,7 +57,7 @@ function prepareCodeSampleItem(codename) {
 }
 
 module.exports = {
-    upsertCodeFragment,
-    archiveCodeFragment,
+    upsertCodeSampleVariantAsync,
+    archiveCodeSampleAsync,
     prepareCodeSampleItem,
 };

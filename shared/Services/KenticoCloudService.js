@@ -2,54 +2,53 @@ const kenticoCloudClient = require('./Clients/KenticoCloudClient');
 const { LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE } = require('../utils/constants');
 const { configVariables } = require('../config/configuration');
 
-async function createItemAsync(addedContentItem, codename, variant) {
-    await kenticoCloudClient.createContentItemAsync(addedContentItem);
-    await kenticoCloudClient.upsertLanguageVariantAsync(codename, variant);
+async function upsertContentItemVariant(item, codename, itemVariant) {
+    const retrievedItem = await viewItemAsync(codename);
+
+    if (retrievedItem === null) {
+        await createItemVariantAsync(item, codename, itemVariant);
+    } else {
+        await updateItemVariantAsync(codename, itemVariant);
+    }
 }
 
 async function archiveItemVariantAsync(codename) {
-    const existContentItem = await getContentItem(codename) !== null;
+    const existContentItem = await viewItemAsync(codename) !== null;
 
     if (existContentItem) {
-        const isItemPublished = await isContentItemPublished(codename);
+        const isItemPublished = await isItemVariantPublishedAsync(codename);
 
         if (isItemPublished) {
-            await kenticoCloudClient.unpublishLanguageVariantAsync(codename);
+            await kenticoCloudClient.unpublishItemVariantAsync(codename);
         }
 
-        await kenticoCloudClient.archiveContentItemVariantAsync(codename);
+        await kenticoCloudClient.archiveItemVariantAsync(codename);
     }
 }
 
-async function updateItemAsync(updatedContentItem, codename, variant) {
-    const isItemPublished = await isContentItemPublished(codename);
-    const isItemArchived = await isContentItemArchived(codename);
-
-    if (isItemPublished) {
-        await kenticoCloudClient.createNewContentItemVersionAsync(codename);
-    }
-
-    if (isItemArchived) {
-        await kenticoCloudClient.changeContentItemVariantWorkflowStepToDraftAsync(codename);
-    }
-
-    await kenticoCloudClient.updateContentItemAsync(updatedContentItem, codename);
-    await kenticoCloudClient.upsertLanguageVariantAsync(codename, variant)
+async function createItemVariantAsync(item, codename, itemVariant) {
+    await kenticoCloudClient.addItemAsync(item);
+    await kenticoCloudClient.upsertItemVariantAsync(codename, itemVariant);
 }
 
-async function upsertContentItemVariant(contentItem, codename, variant) {
-    const kenticoCloudContentItem = await getContentItem(codename);
+async function updateItemVariantAsync(codename, itemVariant) {
+    const isItemVariantPublished = await isItemVariantPublishedAsync(codename);
+    const isItemVariantArchived = await isItemVariantArchivedAsync(codename);
 
-    if (kenticoCloudContentItem === null) {
-        await createItemAsync(contentItem, codename, variant);
-    } else {
-        await updateItemAsync(contentItem, codename, variant);
+    if (isItemVariantPublished) {
+        await kenticoCloudClient.createNewItemVersionAsync(codename);
     }
+
+    if (isItemVariantArchived) {
+        await kenticoCloudClient.changeItemVariantWorkflowStepToCopywritingAsync(codename);
+    }
+
+    await kenticoCloudClient.upsertItemVariantAsync(codename, itemVariant)
 }
 
-async function getContentItem(codename) {
+async function viewItemAsync(codename) {
     try {
-        return await kenticoCloudClient.getContentItemAsync(codename);
+        return await kenticoCloudClient.viewItemAsync(codename);
     } catch (error) {
         if (error.errorCode === LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE) {
             return null;
@@ -59,14 +58,14 @@ async function getContentItem(codename) {
     }
 }
 
-async function isContentItemPublished(codename) {
-    const item = await kenticoCloudClient.viewLanguageVariantAsync(codename);
+async function isItemVariantPublishedAsync(codename) {
+    const item = await kenticoCloudClient.viewItemVariantAsync(codename);
 
     return item.data.workflowStep.id === configVariables.publishedStepId;
 }
 
-async function isContentItemArchived(codename) {
-    const item = await kenticoCloudClient.viewLanguageVariantAsync(codename);
+async function isItemVariantArchivedAsync(codename) {
+    const item = await kenticoCloudClient.viewItemVariantAsync(codename);
 
     return item.data.workflowStep.id === configVariables.archivedStepId;
 }

@@ -1,7 +1,7 @@
 {
   "bindings": [
     {
-      "name": "codeSamples",
+      "name": "codeFragments",
       "type": "activityTrigger",
       "direction": "in"
     }

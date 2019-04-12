@@ -24,17 +24,17 @@ function createTableIfNotExists(resolve, reject, tableService) {
     );
 }
 
-async function deleteCodenameEntity(resolve, reject, task) {
+async function deleteCodeSampleInfoAsync(resolve, reject, codeSampleInfo) {
     const tableService = await getAzureTableService();
 
     tableService.deleteEntity(
         CODE_SAMPLE_INFO_TABLE,
-        task,
+        codeSampleInfo,
         error => handleTableStorageError(resolve, reject, error),
     );
 }
 
-async function queryCodenamesEntities(resolve, reject, query) {
+async function queryCodeSampleInfoAsync(resolve, reject, query) {
     const tableService = await getAzureTableService();
 
     tableService.queryEntities(
@@ -51,12 +51,12 @@ async function queryCodenamesEntities(resolve, reject, query) {
     );
 }
 
-async function upsertCodenameEntity(resolve, reject, task) {
+async function upsertCodeSampleInfoAsync(resolve, reject, codeSampleInfo) {
     const tableService = await getAzureTableService();
 
     tableService.insertOrReplaceEntity(
         CODE_SAMPLE_INFO_TABLE,
-        task,
+        codeSampleInfo,
         error => handleTableStorageError(resolve, reject, error),
     );
 }
@@ -70,7 +70,7 @@ function handleTableStorageError(resolve, reject, error) {
 }
 
 module.exports = {
-    deleteCodenameEntity,
-    queryCodenamesEntities,
-    upsertCodenameEntity,
+    deleteCodeSampleInfoAsync,
+    queryCodeSampleInfoAsync,
+    upsertCodeSampleInfoAsync,
 };

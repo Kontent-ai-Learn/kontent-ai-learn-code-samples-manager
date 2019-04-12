@@ -1,43 +1,39 @@
 const azure = require('azure-storage');
-const {
-    upsertCodenameEntity,
-    deleteCodenameEntity,
-    queryCodenamesEntities,
-} = require('../../shared/Services/Clients/TableServiceClient');
+const tableServiceClient = require('../../shared/Services/Clients/TableServiceClient');
 
-function addCodenameToTable(codename, identifier) {
+function upsertCodeSampleInfoAsync(codename, identifier) {
     return new Promise(async (resolve, reject) => {
-        const task = prepareCodenameEntity(identifier, codename);
+        const codeSampleInfo = prepareCodeSampleInfo(identifier, codename);
 
-        await upsertCodenameEntity(resolve, reject, task);
+        await tableServiceClient.upsertCodeSampleInfoAsync(resolve, reject, codeSampleInfo);
     });
 }
 
-function removeCodenameFromTable(codename, identifier) {
+function removeCodeSampleInfoAsync(codename, identifier) {
     return new Promise(async (resolve, reject) => {
-        const task = prepareCodenameEntity(identifier, codename);
+        const codeSampleInfo = prepareCodeSampleInfo(identifier, codename);
 
-        await deleteCodenameEntity(resolve, reject, task);
+        await tableServiceClient.deleteCodeSampleInfoAsync(resolve, reject, codeSampleInfo);
     });
 }
 
-async function getCodenamesByIdentifier(identifier) {
-    const codenamesEntities = await getCodenamesEntities(identifier);
+async function queryCodeSampleInfoAsync(identifier) {
+    const codeSampleInfoEntities = await executeQueryCodeSampleInfo(identifier);
 
-    return codenamesEntities.map(entity => entity.RowKey['_']);
+    return codeSampleInfoEntities.map(entity => entity.RowKey['_']);
 }
 
-function getCodenamesEntities(identifier) {
+function executeQueryCodeSampleInfo(identifier) {
     return new Promise(async (resolve, reject) => {
         const query = new azure
             .TableQuery()
             .where('PartitionKey eq ?', identifier);
 
-        await queryCodenamesEntities(resolve, reject, query);
+        await tableServiceClient.queryCodeSampleInfoAsync(resolve, reject, query);
     });
 }
 
-function prepareCodenameEntity(identifier, codename) {
+function prepareCodeSampleInfo(identifier, codename) {
     return {
         PartitionKey: { '_': identifier },
         RowKey: { '_': codename },
@@ -45,7 +41,7 @@ function prepareCodenameEntity(identifier, codename) {
 }
 
 module.exports = {
-    addCodenameToTable,
-    removeCodenameFromTable,
-    getCodenamesByIdentifier,
+    upsertCodeSampleInfoAsync,
+    removeCodeSampleInfoAsync,
+    queryCodeSampleInfoAsync,
 };
