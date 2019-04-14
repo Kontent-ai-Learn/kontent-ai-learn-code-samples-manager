@@ -1,10 +1,10 @@
-const { configVariables } = require('../config/configuration');
+const { configuration } = require('../config/configuration');
 const { ContentManagementClient } = require('kentico-cloud-content-management');
 
 function getContentManagementClient() {
     return new ContentManagementClient({
-        projectId: configVariables.kenticoProjectId,
-        apiKey: configVariables.kenticoContentManagementApiKey,
+        projectId: configuration.kenticoProjectId,
+        apiKey: configuration.kenticoContentManagementApiKey,
     });
 }
 

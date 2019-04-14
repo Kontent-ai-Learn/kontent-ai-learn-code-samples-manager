@@ -1,4 +1,4 @@
-const configVariables = {
+const configuration = {
     kenticoProjectId: '',
     kenticoContentManagementApiKey: '',
     azureStorageAccount: '',
@@ -17,26 +17,26 @@ function setupConfiguration() {
     setupAzureStorage();
     setupWorkflowStepsIds();
 
-    configVariables.chunkSize = getEnvironmentVariable('CHUNK_SIZE');
+    configuration.chunkSize = getEnvironmentVariable('CHUNK_SIZE');
 }
 
 function setupKenticoCloud() {
-    configVariables.kenticoProjectId = getEnvironmentVariable('KENTICO_PROJECT_ID');
-    configVariables.kenticoContentManagementApiKey = getEnvironmentVariable('KENTICO_CM_API_KEY');
+    configuration.kenticoProjectId = getEnvironmentVariable('KENTICO_PROJECT_ID');
+    configuration.kenticoContentManagementApiKey = getEnvironmentVariable('KENTICO_CM_API_KEY');
 }
 
 function setupAzureStorage() {
-    configVariables.azureStorageAccount = getEnvironmentVariable('AZURE_STORAGE_ACCOUNT');
-    configVariables.azureStorageAccessKey = getEnvironmentVariable('AZURE_STORAGE_ACCESS_KEY');
+    configuration.azureStorageAccount = getEnvironmentVariable('AZURE_STORAGE_ACCOUNT');
+    configuration.azureStorageAccessKey = getEnvironmentVariable('AZURE_STORAGE_ACCESS_KEY');
 }
 
 function setupWorkflowStepsIds() {
-    configVariables.copywritingStepId = getEnvironmentVariable('COPYWRITING_STEP_ID');
-    configVariables.publishedStepId = getEnvironmentVariable('PUBLISHED_STEP_ID');
-    configVariables.archivedStepId = getEnvironmentVariable('ARCHIVED_STEP_ID');
+    configuration.copywritingStepId = getEnvironmentVariable('COPYWRITING_STEP_ID');
+    configuration.publishedStepId = getEnvironmentVariable('PUBLISHED_STEP_ID');
+    configuration.archivedStepId = getEnvironmentVariable('ARCHIVED_STEP_ID');
 }
 
 module.exports = {
     setupConfiguration,
-    configVariables,
+    configuration,
 };

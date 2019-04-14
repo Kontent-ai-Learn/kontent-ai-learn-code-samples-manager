@@ -8,5 +8,5 @@ module.exports = async function (context) {
     return {
         mode: loadedData.mode,
         codeFragments: getGroupedBy(loadedData.codeFragments, 'identifier'),
-    }
+    };
 };
