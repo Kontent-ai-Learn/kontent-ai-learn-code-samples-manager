@@ -9,11 +9,11 @@ async function updateCodeSamplesItemAsync(codeSampleItemCodename) {
     const codeSamplesLinkedItems = await queryCodeSampleInfoAsync(codeSampleItemCodename);
 
     if (codeSamplesLinkedItems.length > 1) {
-        await upsertCodeSamplesVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems);
+        await upsertCodeSamplesItemVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems);
     }
 
     if (codeSamplesLinkedItems.length === 0) {
-        await archiveCodeSamplesVariantAsync(codeSampleItemCodename);
+        await kenticoCloudService.archiveItemVariantAsync(codeSampleItemCodename);
     }
 }
 
@@ -35,19 +35,15 @@ async function updateCodeSampleInfoAsync(codeSamplesList) {
     }
 }
 
-async function upsertCodeSamplesVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems) {
+async function upsertCodeSamplesItemVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems) {
     const codeSamplesItem = prepareCodeSamplesItem(codeSampleItemCodename);
     const codeSamplesVariant = prepareCodeSamplesVariant(codeSamplesLinkedItems);
 
-    await kenticoCloudService.upsertContentItemVariant(
-        codeSamplesItem,
+    await kenticoCloudService.upsertItemVariant(
         codeSampleItemCodename,
+        codeSamplesItem,
         codeSamplesVariant,
     );
-}
-
-async function archiveCodeSamplesVariantAsync(codeSampleItemCodename) {
-    await kenticoCloudService.archiveItemVariantAsync(codeSampleItemCodename);
 }
 
 function prepareCodeSamplesItem(identifier) {

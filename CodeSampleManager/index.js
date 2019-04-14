@@ -1,5 +1,5 @@
 const {
-    upsertCodeSampleVariantAsync,
+    upsertCodeSampleAsync,
     archiveCodeSampleAsync,
 } = require('./utils/codeSampleHandlers');
 
@@ -10,7 +10,7 @@ module.exports = async function (context) {
         switch (codeFragment.status) {
             case 'added':
             case 'modified':
-                await upsertCodeSampleVariantAsync(codeFragment);
+                await upsertCodeSampleAsync(codeFragment);
                 break;
 
             case 'deleted':

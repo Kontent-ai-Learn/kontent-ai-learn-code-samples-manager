@@ -1,12 +1,12 @@
 const kenticoCloudService = require('../../shared/Services/KenticoCloudService');
 
-async function upsertCodeSampleVariantAsync(codeFragment) {
+async function upsertCodeSampleAsync(codeFragment) {
     const codeSampleItem = prepareCodeSampleItem(codeFragment.codename);
     const codeSampleVariant = prepareCodeSampleVariant(codeFragment);
 
-    await kenticoCloudService.upsertContentItemVariant(
-        codeSampleItem,
+    await kenticoCloudService.upsertItemVariant(
         codeFragment.codename,
+        codeSampleItem,
         codeSampleVariant,
     );
 }
@@ -32,32 +32,32 @@ function prepareCodeSampleVariant(codeFragment) {
     ];
 }
 
-function prepareTaxonomyElement(elementCodename, valueCodename) {
+function prepareTaxonomyElement(codename, value) {
     return {
         element: {
-            codename: elementCodename,
+            codename,
         },
         value: [
             {
-                codename: valueCodename,
+                codename: value,
             },
         ],
     }
 }
 
-function prepareCodeSampleItem(codename) {
+function prepareCodeSampleItem(name) {
     return {
         type: {
             codename: 'code_sample',
         },
-        name: codename,
+        name,
         // Delete when CM API v2 update content item end-point will be fixed and sitemap_locations will not be required
         sitemap_locations: [],
     };
 }
 
 module.exports = {
-    upsertCodeSampleVariantAsync,
+    upsertCodeSampleAsync,
     archiveCodeSampleAsync,
     prepareCodeSampleItem,
 };

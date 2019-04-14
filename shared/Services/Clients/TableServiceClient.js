@@ -1,11 +1,11 @@
 const azure = require('azure-storage');
-const { configVariables } = require('../../config/configuration');
+const { configuration } = require('../../config/configuration');
 const { CODE_SAMPLE_INFO_TABLE } = require('../../utils/constants');
 
 async function getAzureTableService() {
     const tableService = azure.createTableService(
-        configVariables.azureStorageAccount,
-        configVariables.azureStorageAccessKey,
+        configuration.azureStorageAccount,
+        configuration.azureStorageAccessKey,
     );
 
     await createTable(tableService);
