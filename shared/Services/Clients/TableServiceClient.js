@@ -2,18 +2,14 @@ const azure = require('azure-storage');
 const { configuration } = require('../../config/configuration');
 const { CODE_SAMPLE_INFO_TABLE } = require('../../utils/constants');
 
-async function getAzureTableService() {
-    const tableService = azure.createTableService(
-        configuration.azureStorageAccount,
-        configuration.azureStorageAccessKey,
+function getAzureTableService(azureStorageAccount, azureStorageAccessKey) {
+    return azure.createTableService(
+        azureStorageAccount,
+        azureStorageAccessKey,
     );
-
-    await createTable(tableService);
-
-    return tableService;
 }
 
-function createTable(tableService) {
+function setupAzureTableService(tableService) {
     return new Promise((resolve, reject) => createTableIfNotExists(resolve, reject, tableService));
 }
 
@@ -25,7 +21,7 @@ function createTableIfNotExists(resolve, reject, tableService) {
 }
 
 async function deleteCodeSampleInfoAsync(resolve, reject, codeSampleInfo) {
-    const tableService = await getAzureTableService();
+    const tableService = getAzureTableService(configuration.azureStorageAccount, configuration.azureStorageAccessKey);
 
     tableService.deleteEntity(
         CODE_SAMPLE_INFO_TABLE,
@@ -35,7 +31,7 @@ async function deleteCodeSampleInfoAsync(resolve, reject, codeSampleInfo) {
 }
 
 async function queryCodeSampleInfoAsync(resolve, reject, query) {
-    const tableService = await getAzureTableService();
+    const tableService = getAzureTableService(configuration.azureStorageAccount, configuration.azureStorageAccessKey);
 
     tableService.queryEntities(
         CODE_SAMPLE_INFO_TABLE,
@@ -52,7 +48,7 @@ async function queryCodeSampleInfoAsync(resolve, reject, query) {
 }
 
 async function upsertCodeSampleInfoAsync(resolve, reject, codeSampleInfo) {
-    const tableService = await getAzureTableService();
+    const tableService = getAzureTableService(configuration.azureStorageAccount, configuration.azureStorageAccessKey);
 
     tableService.insertOrReplaceEntity(
         CODE_SAMPLE_INFO_TABLE,
@@ -73,4 +69,6 @@ module.exports = {
     deleteCodeSampleInfoAsync,
     queryCodeSampleInfoAsync,
     upsertCodeSampleInfoAsync,
+    setupAzureTableService,
+    getAzureTableService,
 };

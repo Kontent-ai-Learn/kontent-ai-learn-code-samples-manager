@@ -1,8 +1,8 @@
 const df = require('durable-functions');
-const { configuration, setupConfiguration } = require('../shared/config/configuration');
+const { configuration, setupOrchestrator } = require('../shared/config/configuration');
 
 module.exports = df.orchestrator(function * (context) {
-    setupConfiguration();
+    setupOrchestrator();
 
     const chunkSize = configuration.chunkSize;
     const blobStorageUrl = context.bindingData.input;
