@@ -1,9 +1,11 @@
+const { setupKenticoCloud } = require('../shared/config/configuration');
 const {
     upsertCodeSampleAsync,
     archiveCodeSampleAsync,
 } = require('./utils/codeSampleHandlers');
 
 module.exports = async function (context) {
+    setupKenticoCloud();
     const codeFragments = context.bindingData.codeFragments;
 
     for (const codeFragment of codeFragments) {

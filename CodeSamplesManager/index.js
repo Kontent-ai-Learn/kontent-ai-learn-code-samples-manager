@@ -1,9 +1,16 @@
 const {
+    setupAzureStorage,
+    setupKenticoCloud,
+} = require('../shared/config/configuration');
+const {
     updateCodeSampleInfoAsync,
     updateCodeSamplesItemAsync,
 } = require('./utils/codeSamplesHandlers');
 
 module.exports = async function (context) {
+    setupAzureStorage();
+    setupKenticoCloud();
+
     const codeSamplesList = context.bindingData.codeSamplesList;
 
     if (codeSamplesList.length !== 0) {
