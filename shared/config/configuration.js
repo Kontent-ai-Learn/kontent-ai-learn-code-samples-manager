@@ -1,7 +1,7 @@
 const {
     getAzureTableService,
     setupAzureTableService
-} = require('../Services/Clients/TableServiceClient');
+} = require('../Services/Clients/TableServiceProvider');
 
 const configuration = {
     kenticoProjectId: '',
@@ -18,22 +18,21 @@ const getEnvironmentVariable = (variableName) =>
     process.env[variableName];
 
 function setupOrchestrator() {
-    configuration.chunkSize = getEnvironmentVariable('CHUNK_SIZE');
+    configuration.chunkSize = getEnvironmentVariable('ChunkSize');
 }
 
 function setupKenticoCloud() {
-    configuration.kenticoProjectId = getEnvironmentVariable('KENTICO_PROJECT_ID');
-    configuration.kenticoContentManagementApiKey = getEnvironmentVariable('KENTICO_CM_API_KEY');
-    configuration.copywritingStepId = getEnvironmentVariable('COPYWRITING_STEP_ID');
-    configuration.publishedStepId = getEnvironmentVariable('PUBLISHED_STEP_ID');
-    configuration.archivedStepId = getEnvironmentVariable('ARCHIVED_STEP_ID');
+    configuration.kenticoProjectId = getEnvironmentVariable('KC.ProjectId');
+    configuration.kenticoContentManagementApiKey = getEnvironmentVariable('KC.ContentManagementApiKey');
+    configuration.copywritingStepId = getEnvironmentVariable('KC.Step.CopywritingId');
+    configuration.publishedStepId = getEnvironmentVariable('KC.Step.PublishedId');
+    configuration.archivedStepId = getEnvironmentVariable('KC.Step.ArchivedId');
 }
 
 async function setupAzureStorage() {
-    configuration.azureStorageAccount = getEnvironmentVariable('AZURE_STORAGE_ACCOUNT');
-    configuration.azureStorageAccessKey = getEnvironmentVariable('AZURE_STORAGE_ACCESS_KEY');
+    configuration.azureConnectionString = getEnvironmentVariable('Azure.ConnectionString');
 
-    const tableService = getAzureTableService(configuration.azureStorageAccount, configuration.azureStorageAccessKey);
+    const tableService = getAzureTableService(configuration.azureConnectionString);
     await setupAzureTableService(tableService);
 }
 
