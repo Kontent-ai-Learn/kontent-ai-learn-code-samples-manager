@@ -1,4 +1,4 @@
-const { configuration } = require('../config/configuration');
+const { configuration } = require('../external/configuration');
 const { ContentManagementClient } = require('kentico-cloud-content-management');
 
 function getContentManagementClient() {
@@ -8,4 +8,6 @@ function getContentManagementClient() {
     });
 }
 
-module.exports = getContentManagementClient;
+module.exports = {
+    getContentManagementClient
+};

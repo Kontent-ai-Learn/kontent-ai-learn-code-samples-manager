@@ -1,5 +1,5 @@
 const df = require('durable-functions');
-const { configuration, setupOrchestrator } = require('../shared/config/configuration');
+const { configuration, setupOrchestrator } = require('../shared/external/configuration');
 
 module.exports = df.orchestrator(function * (context) {
     setupOrchestrator();

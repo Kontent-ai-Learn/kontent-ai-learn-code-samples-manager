@@ -1,4 +1,4 @@
-const { setupKenticoCloud } = require('../shared/config/configuration');
+const { setupKenticoCloud } = require('../shared/external/configuration');
 const {
     upsertCodeSampleAsync,
     archiveCodeSampleAsync,

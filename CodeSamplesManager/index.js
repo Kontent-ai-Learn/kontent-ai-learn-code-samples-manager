@@ -1,7 +1,7 @@
 const {
     setupAzureStorage,
     setupKenticoCloud,
-} = require('../shared/config/configuration');
+} = require('../shared/external/configuration');
 const {
     updateCodeSampleInfoAsync,
     updateCodeSamplesItemAsync,

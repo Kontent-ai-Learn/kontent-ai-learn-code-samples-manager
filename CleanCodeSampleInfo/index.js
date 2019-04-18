@@ -1,4 +1,4 @@
-const { setupAzureStorage } = require('../shared/config/configuration');
+const { setupAzureStorage } = require('../shared/external/configuration');
 const { deleteAllEntities } = require('./Services/azureTableService');
 
 module.exports = async function () {

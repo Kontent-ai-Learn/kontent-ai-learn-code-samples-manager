@@ -1,4 +1,4 @@
-const kenticoCloudService = require('../../shared/Services/KenticoCloudService');
+const kenticoCloudService = require('../../shared/Services');
 const {
     upsertCodeSampleInfoAsync,
     queryCodeSampleInfoAsync,
@@ -39,7 +39,7 @@ async function upsertCodeSamplesItemVariantAsync(codeSampleItemCodename, codeSam
     const codeSamplesItem = prepareCodeSamplesItem(codeSampleItemCodename);
     const codeSamplesVariant = prepareCodeSamplesVariant(codeSamplesLinkedItems);
 
-    await kenticoCloudService.upsertItemVariant(
+    await kenticoCloudService.upsertItemVariantAsync(
         codeSampleItemCodename,
         codeSamplesItem,
         codeSamplesVariant,
