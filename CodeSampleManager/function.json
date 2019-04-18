@@ -1,0 +1,9 @@
+{
+  "bindings": [
+    {
+      "name": "codeFragments",
+      "type": "activityTrigger",
+      "direction": "in"
+    }
+  ]
+}

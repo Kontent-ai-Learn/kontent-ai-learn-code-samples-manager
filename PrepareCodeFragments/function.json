@@ -1,0 +1,9 @@
+{
+  "bindings": [
+    {
+      "name": "blobStorageUrl",
+      "type": "activityTrigger",
+      "direction": "in"
+    }
+  ]
+}
