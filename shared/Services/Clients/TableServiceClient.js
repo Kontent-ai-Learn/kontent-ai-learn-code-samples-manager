@@ -2,7 +2,7 @@ const {
     getAzureTableService,
     handleTableStorageError,
 } = require('./TableServiceProvider');
-const { configuration } = require('./../../config/configuration');
+const { configuration } = require('./../../external/configuration');
 const { CODE_SAMPLE_INFO_TABLE } = require('../../utils/constants');
 
 async function deleteCodeSampleInfoAsync(resolve, reject, codeSampleInfo) {

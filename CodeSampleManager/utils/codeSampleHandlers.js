@@ -1,10 +1,10 @@
-const kenticoCloudService = require('../../shared/Services/KenticoCloudService');
+const kenticoCloudService = require('../../shared/Services');
 
 async function upsertCodeSampleAsync(codeFragment) {
     const codeSampleItem = prepareCodeSampleItem(codeFragment.codename);
     const codeSampleVariant = prepareCodeSampleVariant(codeFragment);
 
-    await kenticoCloudService.upsertItemVariant(
+    await kenticoCloudService.upsertItemVariantAsync(
         codeFragment.codename,
         codeSampleItem,
         codeSampleVariant,

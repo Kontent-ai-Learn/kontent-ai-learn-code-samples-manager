@@ -1,6 +1,6 @@
-const getContentManagementClient = require('../../utils/contentManagmentClient');
+const { getContentManagementClient } = require('../../utils/getContentManagementClient');
 const { DEFAULT_LANGUAGE_ID } = require('../../utils/constants');
-const { configuration } = require('../../config/configuration');
+const { configuration } = require('../../external/configuration');
 
 function viewItemAsync(codename) {
     return getContentManagementClient()
