@@ -1,32 +1,42 @@
 const azure = require('azure-storage');
 const tableServiceClient = require('../../shared/Services/Clients/TableServiceClient');
+const {
+    ACTIVE_CODE_SAMPLE_INFO,
+    ARCHIVED_CODE_SAMPLE_INFO,
+} = require('../../shared/utils/constants');
 
 function upsertCodeSampleInfoAsync(codename, identifier) {
-    return executeCodeSampleInfoModification(
-        codename,
+    const codeSampleInfo = prepareCodeSampleInfo(
         identifier,
+        codename,
+        ACTIVE_CODE_SAMPLE_INFO,
+    );
+
+    return executeCodeSampleInfoModification(
+        codeSampleInfo,
         tableServiceClient.upsertCodeSampleInfoAsync,
     );
 }
 
-function deleteCodeSampleInfoAsync(codename, identifier) {
-    return executeCodeSampleInfoModification(
-        codename,
+function archiveCodeSampleInfoAsync(codename, identifier) {
+    const codeSampleInfo = prepareCodeSampleInfo(
         identifier,
-        tableServiceClient.deleteCodeSampleInfoAsync,
+        codename,
+        ARCHIVED_CODE_SAMPLE_INFO,
+    );
+
+    return executeCodeSampleInfoModification(
+        codeSampleInfo,
+        tableServiceClient.upsertCodeSampleInfoAsync,
     )
 }
 
-async function queryCodeSampleInfoAsync(identifier) {
-    const codeSampleInfoEntities = await executeQueryCodeSampleInfo(identifier);
-
-    return codeSampleInfoEntities.map(entity => entity.RowKey['_']);
+function getCodeSampleInfoAsync(identifier) {
+    return executeQueryCodeSampleInfo(identifier);
 }
 
-function executeCodeSampleInfoModification(codename, identifier, modificationFunction) {
+function executeCodeSampleInfoModification(codeSampleInfo, modificationFunction) {
     return new Promise(async (resolve, reject) => {
-        const codeSampleInfo = prepareCodeSampleInfo(identifier, codename);
-
         await modificationFunction(resolve, reject, codeSampleInfo);
     });
 }
@@ -41,15 +51,16 @@ function executeQueryCodeSampleInfo(identifier) {
     });
 }
 
-function prepareCodeSampleInfo(identifier, codename) {
+function prepareCodeSampleInfo(identifier, codename, status) {
     return {
         PartitionKey: { '_': identifier },
         RowKey: { '_': codename },
+        Status: { '_': status },
     };
 }
 
 module.exports = {
     upsertCodeSampleInfoAsync,
-    removeCodeSampleInfoAsync: deleteCodeSampleInfoAsync,
-    queryCodeSampleInfoAsync,
+    archiveCodeSampleInfoAsync,
+    getCodeSampleInfoAsync,
 };

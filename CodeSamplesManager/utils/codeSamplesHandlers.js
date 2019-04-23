@@ -1,18 +1,25 @@
+const { ACTIVE_CODE_SAMPLE_INFO } = require('../../shared/utils/constants');
 const kenticoCloudService = require('../../shared/Services');
 const {
     upsertCodeSampleInfoAsync,
-    queryCodeSampleInfoAsync,
-    removeCodeSampleInfoAsync,
+    getCodeSampleInfoAsync,
+    archiveCodeSampleInfoAsync,
 } = require('./azureTableService');
 
 async function updateCodeSamplesItemAsync(codeSampleItemCodename) {
-    const codeSamplesLinkedItems = await queryCodeSampleInfoAsync(codeSampleItemCodename);
+    const codeSampleItemsInfo = await getCodeSampleInfoAsync(codeSampleItemCodename);
+
+    const notArchivedCodeSamplesLinkedItems = codeSampleItemsInfo
+        .filter(entity => entity.Status['_'] === ACTIVE_CODE_SAMPLE_INFO);
+
+    const codeSamplesLinkedItems = codeSampleItemsInfo
+        .map(entity => entity.RowKey['_']);
 
     if (codeSamplesLinkedItems.length > 1) {
         await upsertCodeSamplesItemVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems);
     }
 
-    if (codeSamplesLinkedItems.length === 0) {
+    if (notArchivedCodeSamplesLinkedItems.length === 0) {
         await kenticoCloudService.archiveItemVariantAsync(codeSampleItemCodename);
     }
 }
@@ -26,7 +33,7 @@ async function updateCodeSampleInfoAsync(codeSamplesList) {
                 break;
 
             case 'deleted':
-                await removeCodeSampleInfoAsync(codeSample.codename, codeSample.identifier);
+                await archiveCodeSampleInfoAsync(codeSample.codename, codeSample.identifier);
                 break;
 
             default:
