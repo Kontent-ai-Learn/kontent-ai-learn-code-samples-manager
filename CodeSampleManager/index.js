@@ -5,9 +5,18 @@ const {
 } = require('./utils/codeSampleHandlers');
 
 module.exports = async function (context) {
-    setupKenticoCloud();
-    const codeFragments = context.bindingData.codeFragments;
+    try {
+        const codeFragments = context.bindingData.codeFragments;
 
+        setupKenticoCloud();
+        await processCodeSampleItems(codeFragments);
+    } catch (error) {
+        /** This try-catch is required for correct logging of exceptions in Azure */
+        throw `Message: ${error.message} \nStack Trace: ${error.stack}`;
+    }
+};
+
+async function processCodeSampleItems(codeFragments) {
     for (const codeFragment of codeFragments) {
         switch (codeFragment.status) {
             case 'added':
@@ -23,4 +32,4 @@ module.exports = async function (context) {
                 throw new Error('Unexpected value of the codeFragment status!')
         }
     }
-};
+}
