@@ -1,11 +1,15 @@
-const { LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE } = require('../../utils/constants');
+const {
+    LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE,
+    ITEM_NOT_FOUND_ERROR_CODE
+} = require('../../utils/constants');
 const {
     viewItemAsyncFactory,
+    viewVariantAsyncFactory,
     archiveItemVariantAsyncFactory,
     unpublishVariantAsyncFactory,
-    createItemVariantAsyncFactory,
     updateVariantAsyncFactory,
-    upsertItemVariantAsyncFactory,
+    addItemAsyncFactory,
+    upsertVariantAsyncFactory,
 } = require('./KenticoCloudServices');
 
 describe('KenticoCloudServices', () => {
@@ -19,30 +23,62 @@ describe('KenticoCloudServices', () => {
         code: 'test code',
     };
 
-    describe('upsertItemVariantAsyncFactory', () => {
-        it('should update item variant if it exists.', async () => {
+    describe('addItemAsyncFactory', () => {
+        it('should do nothing if item exists.', async () => {
             const mockDependencies = {
                 viewItemAsync: (codename) => ({ codename }),
-                updateVariantAsync: jest.fn(),
-                createItemVariantAsync: jest.fn(),
+                kenticoCloudClient: {
+                    addItemAsync: jest.fn(),
+                }
             };
 
-            await upsertItemVariantAsyncFactory(mockDependencies)(codename, item, variant);
+            await addItemAsyncFactory(mockDependencies)(codename, item);
 
-            expect(mockDependencies.updateVariantAsync).toHaveBeenCalledWith(codename, variant);
-            expect(mockDependencies.createItemVariantAsync).not.toHaveBeenCalledWith();
+            expect(mockDependencies.kenticoCloudClient.addItemAsync).not.toHaveBeenCalledWith();
         });
 
-        it('should create new item if it does not exist.', async () => {
+        it('should create new item if item does not exist.', async () => {
             const mockDependencies = {
                 viewItemAsync: () => null,
-                updateVariantAsync: jest.fn(),
-                createItemVariantAsync: jest.fn(),
+                kenticoCloudClient: {
+                    addItemAsync: jest.fn(),
+                }
             };
 
-            await upsertItemVariantAsyncFactory(mockDependencies)(codename, item, variant);
+            await addItemAsyncFactory(mockDependencies)(codename, item);
 
-            expect(mockDependencies.createItemVariantAsync).toHaveBeenCalledWith(codename, item, variant);
+            expect(mockDependencies.kenticoCloudClient.addItemAsync).toHaveBeenCalledWith(item);
+        });
+    });
+
+    describe('upsertVariantAsyncFactory', () => {
+        it('should update variant if it exists.', async () => {
+            const mockDependencies = {
+                viewVariantAsync: (codename) => ({ codename }),
+                updateVariantAsync: jest.fn(),
+                kenticoCloudClient: {
+                    upsertVariantAsync: jest.fn(),
+                }
+            };
+
+            await upsertVariantAsyncFactory(mockDependencies)(codename, variant);
+
+            expect(mockDependencies.kenticoCloudClient.upsertVariantAsync).not.toHaveBeenCalledWith();
+            expect(mockDependencies.updateVariantAsync).toHaveBeenCalledWith(codename, variant);
+        });
+
+        it('should create new variant if it does not exist.', async () => {
+            const mockDependencies = {
+                viewVariantAsync: () => null,
+                updateVariantAsync: jest.fn(),
+                kenticoCloudClient: {
+                    upsertVariantAsync: jest.fn(),
+                }
+            };
+
+            await upsertVariantAsyncFactory(mockDependencies)(codename, variant);
+
+            expect(mockDependencies.kenticoCloudClient.upsertVariantAsync).toHaveBeenCalledWith(codename, variant);
             expect(mockDependencies.updateVariantAsync).not.toHaveBeenCalledWith();
         });
     });
@@ -104,22 +140,6 @@ describe('KenticoCloudServices', () => {
             await unpublishVariantAsyncFactory(mockDependencies)(codename);
 
             expect(mockDependencies.kenticoCloudClient.unpublishVariantAsync).not.toHaveBeenCalled();
-        });
-    });
-
-    describe('createItemVariantAsyncFactory', () => {
-        it('should create item and variant.', async () => {
-            const mockDependencies = {
-                kenticoCloudClient: {
-                    addItemAsync: jest.fn(),
-                    upsertVariantAsync: jest.fn(),
-                },
-            };
-
-            await createItemVariantAsyncFactory(mockDependencies)(item.codename, item, variant);
-
-            expect(mockDependencies.kenticoCloudClient.addItemAsync).toHaveBeenCalledWith(item);
-            expect(mockDependencies.kenticoCloudClient.upsertVariantAsync).toHaveBeenCalledWith(item.codename, variant);
         });
     });
 
@@ -189,7 +209,7 @@ describe('KenticoCloudServices', () => {
         it('should return null if item does not exist.', async () => {
             const expectedItem = null;
             const error = new Error('Item not found!');
-            error.errorCode = LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE;
+            error.errorCode = ITEM_NOT_FOUND_ERROR_CODE;
 
             const mockKenticoClient = {
                 viewItemAsync: () => {
@@ -198,6 +218,38 @@ describe('KenticoCloudServices', () => {
             };
 
             const actualItem = await viewItemAsyncFactory({ kenticoCloudClient: mockKenticoClient })(codename);
+
+            expect(actualItem).toEqual(expectedItem);
+        });
+    });
+
+    describe('viewVariantAsyncFactory', () => {
+        it('should return correct variant.', async () => {
+            const expectedItem = {
+                codename: codename,
+            };
+
+            const mockKenticoClient = {
+                viewVariantAsync: (codename) => ({ codename }),
+            };
+
+            const actualItem = await viewVariantAsyncFactory({ kenticoCloudClient: mockKenticoClient })(codename);
+
+            expect(actualItem).toEqual(expectedItem);
+        });
+
+        it('should return null if variant does not exist.', async () => {
+            const expectedItem = null;
+            const error = new Error('Variant not found!');
+            error.errorCode = LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE;
+
+            const mockKenticoClient = {
+                viewVariantAsync: () => {
+                    throw error
+                },
+            };
+
+            const actualItem = await viewVariantAsyncFactory({ kenticoCloudClient: mockKenticoClient })(codename);
 
             expect(actualItem).toEqual(expectedItem);
         });
