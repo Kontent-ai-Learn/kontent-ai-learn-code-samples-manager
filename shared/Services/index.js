@@ -1,21 +1,18 @@
 const {
-    upsertItemVariantAsyncFactory,
+    addItemAsyncFactory,
     archiveItemVariantAsyncFactory,
     unpublishVariantAsyncFactory,
-    createItemVariantAsyncFactory,
     updateVariantAsyncFactory,
     viewItemAsyncFactory,
+    viewVariantAsyncFactory,
     isVariantPublishedAsyncFactory,
     isVariantArchivedAsyncFactory,
     checkVariantWorkflowStepFactory,
+    upsertVariantAsyncFactory,
 } = require('./Internal/KenticoCloudServices');
 
 const kenticoCloudClient = require('./Clients/KenticoCloudClient');
 const { configuration } = require('../external/configuration');
-
-const createItemVariantAsync = createItemVariantAsyncFactory({
-    kenticoCloudClient,
-});
 
 const checkVariantWorkflowStep = checkVariantWorkflowStepFactory({
     kenticoCloudClient,
@@ -35,13 +32,11 @@ const isVariantPublishedAsync = isVariantPublishedAsyncFactory({
 
 const unpublishVariantAsync = unpublishVariantAsyncFactory({
     kenticoCloudClient,
-    configuration,
     isVariantPublishedAsync,
 });
 
 const updateVariantAsync = updateVariantAsyncFactory({
     kenticoCloudClient,
-    configuration,
     isVariantPublishedAsync,
     isVariantArchivedAsync,
 });
@@ -50,23 +45,30 @@ const viewItemAsync = viewItemAsyncFactory({
     kenticoCloudClient,
 });
 
+const viewVariantAsync = viewVariantAsyncFactory({
+    kenticoCloudClient,
+});
+
 const archiveItemVariantAsync = archiveItemVariantAsyncFactory({
     kenticoCloudClient,
-    configuration,
     viewItemAsync,
     unpublishVariantAsync,
 });
 
-const upsertItemVariantAsync = upsertItemVariantAsyncFactory({
+const upsertItemAsync = addItemAsyncFactory({
     kenticoCloudClient,
-    configuration,
     viewItemAsync,
-    createItemVariantAsync,
+});
+
+const upsertVariantAsync = upsertVariantAsyncFactory({
+    kenticoCloudClient,
+    viewVariantAsync,
     updateVariantAsync,
 });
 
 module.exports = {
-    upsertItemVariantAsync,
+    upsertItemAsync,
+    upsertVariantAsync,
     archiveItemVariantAsync,
     viewItemAsync,
 };

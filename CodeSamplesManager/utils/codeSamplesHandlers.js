@@ -16,7 +16,7 @@ async function updateCodeSamplesItemAsync(codeSampleItemCodename) {
         .map(entity => entity.RowKey['_']);
 
     if (codeSamplesLinkedItems.length > 1) {
-        await upsertCodeSamplesItemVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems);
+        await upsertCodeSamplesItemAsync(codeSampleItemCodename, codeSamplesLinkedItems);
     }
 
     if (notArchivedCodeSamplesLinkedItems.length === 0) {
@@ -42,13 +42,22 @@ async function updateCodeSampleInfoAsync(codeSamplesList) {
     }
 }
 
-async function upsertCodeSamplesItemVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems) {
+async function upsertCodeSamplesItemAsync(codeSampleItemCodename, codeSamplesLinkedItems) {
     const codeSamplesItem = prepareCodeSamplesItem(codeSampleItemCodename);
+
+    await kenticoCloudService.upsertItemAsync(
+        codeSampleItemCodename,
+        codeSamplesItem
+    );
+
+    await upsertCodeSamplesVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems);
+}
+
+async function upsertCodeSamplesVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems) {
     const codeSamplesVariant = prepareCodeSamplesVariant(codeSamplesLinkedItems);
 
-    await kenticoCloudService.upsertItemVariantAsync(
+    await kenticoCloudService.upsertVariantAsync(
         codeSampleItemCodename,
-        codeSamplesItem,
         codeSamplesVariant,
     );
 }

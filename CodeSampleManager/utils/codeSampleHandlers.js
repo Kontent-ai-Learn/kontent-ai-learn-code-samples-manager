@@ -1,12 +1,21 @@
 const kenticoCloudService = require('../../shared/Services');
 
-async function upsertCodeSampleAsync(codeFragment) {
+async function addCodeSampleAsync(codeFragment) {
     const codeSampleItem = prepareCodeSampleItem(codeFragment.codename);
-    const codeSampleVariant = prepareCodeSampleVariant(codeFragment);
 
-    await kenticoCloudService.upsertItemVariantAsync(
+    await kenticoCloudService.upsertItemAsync(
         codeFragment.codename,
         codeSampleItem,
+    );
+
+    await updateCodeSampleAsync(codeFragment);
+}
+
+async function updateCodeSampleAsync(codeFragment) {
+    const codeSampleVariant = prepareCodeSampleVariant(codeFragment);
+
+    await kenticoCloudService.upsertVariantAsync(
+        codeFragment.codename,
         codeSampleVariant,
     );
 }
@@ -57,7 +66,7 @@ function prepareCodeSampleItem(name) {
 }
 
 module.exports = {
-    upsertCodeSampleAsync,
+    addCodeSampleAsync,
+    updateCodeSampleAsync,
     archiveCodeSampleAsync,
-    prepareCodeSampleItem,
 };

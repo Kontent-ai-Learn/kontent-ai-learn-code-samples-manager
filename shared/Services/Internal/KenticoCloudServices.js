@@ -1,15 +1,28 @@
-const { LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE } = require('../../utils/constants');
+const {
+    LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE,
+    ITEM_NOT_FOUND_ERROR_CODE,
+} = require('../../utils/constants');
 
-function upsertItemVariantAsyncFactory(deps) {
-    return async function (codename, item, variant) {
+function addItemAsyncFactory(deps) {
+    return async function (codename, item) {
         const retrievedItem = await deps.viewItemAsync(codename);
 
         if (retrievedItem === null) {
-            await deps.createItemVariantAsync(codename, item, variant);
+            await deps.kenticoCloudClient.addItemAsync(item);
+        }
+    };
+}
+
+function upsertVariantAsyncFactory(deps) {
+    return async function (codename, variant) {
+        const retrievedVariant = await deps.viewVariantAsync(codename);
+
+        if (retrievedVariant === null) {
+            await deps.kenticoCloudClient.upsertVariantAsync(codename, variant);
         } else {
             await deps.updateVariantAsync(codename, variant);
         }
-    };
+    }
 }
 
 function archiveItemVariantAsyncFactory(deps) {
@@ -33,13 +46,6 @@ function unpublishVariantAsyncFactory(deps) {
     }
 }
 
-function createItemVariantAsyncFactory({ kenticoCloudClient }) {
-    return async function (codename, item, itemVariant) {
-        await kenticoCloudClient.addItemAsync(item);
-        await kenticoCloudClient.upsertVariantAsync(codename, itemVariant);
-    }
-}
-
 function updateVariantAsyncFactory(deps) {
     return async function (codename, variant) {
         const isPublished = await deps.isVariantPublishedAsync(codename);
@@ -58,16 +64,34 @@ function updateVariantAsyncFactory(deps) {
 }
 
 function viewItemAsyncFactory({ kenticoCloudClient }) {
-    return async function (codename) {
-        try {
-            return await kenticoCloudClient.viewItemAsync(codename);
-        } catch (error) {
-            if (error.errorCode === LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE) {
-                return null;
-            }
+    return function (codename) {
+        return ensureEntityAsync(
+            kenticoCloudClient.viewItemAsync,
+            ITEM_NOT_FOUND_ERROR_CODE,
+            codename
+        );
+    }
+}
 
-            throw error;
+function viewVariantAsyncFactory({ kenticoCloudClient }) {
+    return function (codename) {
+        return ensureEntityAsync(
+            kenticoCloudClient.viewVariantAsync,
+            LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE,
+            codename
+        );
+    }
+}
+
+async function ensureEntityAsync(viewEntityAsync, notFoundErrorCode, codename) {
+    try {
+        return await viewEntityAsync(codename);
+    } catch (error) {
+        if (error.errorCode === notFoundErrorCode) {
+            return null;
         }
+
+        throw error;
     }
 }
 
@@ -92,13 +116,14 @@ function checkVariantWorkflowStepFactory({ kenticoCloudClient }) {
 }
 
 module.exports = {
-    upsertItemVariantAsyncFactory,
+    addItemAsyncFactory,
+    upsertVariantAsyncFactory,
     archiveItemVariantAsyncFactory,
     unpublishVariantAsyncFactory,
-    createItemVariantAsyncFactory,
     updateVariantAsyncFactory,
     viewItemAsyncFactory,
     isVariantPublishedAsyncFactory,
     isVariantArchivedAsyncFactory,
     checkVariantWorkflowStepFactory,
+    viewVariantAsyncFactory,
 };
