@@ -2,9 +2,7 @@ const {
     addItemAsyncFactory,
     archiveItemVariantAsyncFactory,
     unpublishVariantAsyncFactory,
-    updateVariantAsyncFactory,
-    viewItemAsyncFactory,
-    viewVariantAsyncFactory,
+    prepareVariantForUpsertAsyncFactory,
     isVariantPublishedAsyncFactory,
     isVariantArchivedAsyncFactory,
     checkVariantWorkflowStepFactory,
@@ -14,20 +12,16 @@ const {
 const kenticoCloudClient = require('./Clients/KenticoCloudClient');
 const { configuration } = require('../external/configuration');
 
-const checkVariantWorkflowStep = checkVariantWorkflowStepFactory({
-    kenticoCloudClient,
-});
+const checkVariantWorkflowStep = checkVariantWorkflowStepFactory(kenticoCloudClient);
 
 const isVariantArchivedAsync = isVariantArchivedAsyncFactory({
-    kenticoCloudClient,
-    configuration,
     checkVariantWorkflowStep,
+    configuration,
 });
 
 const isVariantPublishedAsync = isVariantPublishedAsyncFactory({
-    kenticoCloudClient,
-    configuration,
     checkVariantWorkflowStep,
+    configuration,
 });
 
 const unpublishVariantAsync = unpublishVariantAsyncFactory({
@@ -35,40 +29,26 @@ const unpublishVariantAsync = unpublishVariantAsyncFactory({
     isVariantPublishedAsync,
 });
 
-const updateVariantAsync = updateVariantAsyncFactory({
+const prepareVariantForUpsertAsync = prepareVariantForUpsertAsyncFactory({
     kenticoCloudClient,
     isVariantPublishedAsync,
     isVariantArchivedAsync,
 });
 
-const viewItemAsync = viewItemAsyncFactory({
-    kenticoCloudClient,
-});
-
-const viewVariantAsync = viewVariantAsyncFactory({
-    kenticoCloudClient,
-});
-
 const archiveItemVariantAsync = archiveItemVariantAsyncFactory({
     kenticoCloudClient,
-    viewItemAsync,
     unpublishVariantAsync,
 });
 
-const upsertItemAsync = addItemAsyncFactory({
-    kenticoCloudClient,
-    viewItemAsync,
-});
+const addItemAsync = addItemAsyncFactory(kenticoCloudClient);
 
 const upsertVariantAsync = upsertVariantAsyncFactory({
     kenticoCloudClient,
-    viewVariantAsync,
-    updateVariantAsync,
+    prepareVariantForUpsertAsync,
 });
 
 module.exports = {
-    upsertItemAsync,
+    addItemAsync,
     upsertVariantAsync,
     archiveItemVariantAsync,
-    viewItemAsync,
 };

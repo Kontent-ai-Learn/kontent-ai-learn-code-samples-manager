@@ -1,18 +1,14 @@
 const { ACTIVE_CODE_SAMPLE_INFO } = require('../../shared/utils/constants');
 const kenticoCloudService = require('../../shared/Services');
-const {
-    upsertCodeSampleInfoAsync,
-    getCodeSampleInfoAsync,
-    archiveCodeSampleInfoAsync,
-} = require('./azureTableService');
+const { getCodeSampleInfoAsync } = require('./azureTableService');
 
-const updateCodeSamplesItemAsync = updateCodeSamplesItemAsyncFactory({
+const manageCodeSamplesAsync = manageCodeSamplesAsyncFactory({
     getCodeSampleInfoAsync,
     upsertCodeSamplesItemAsync,
-    archiveItemVariantAsync: kenticoCloudService.archiveItemVariantAsync,
+    kenticoCloudService,
 });
 
-function updateCodeSamplesItemAsyncFactory(deps) {
+function manageCodeSamplesAsyncFactory(deps) {
     return async function (codeSampleItemCodename) {
         const codeSampleItemsInfo = await deps.getCodeSampleInfoAsync(codeSampleItemCodename);
 
@@ -27,25 +23,7 @@ function updateCodeSamplesItemAsyncFactory(deps) {
         }
 
         if (notArchivedCodeSamplesLinkedItems.length === 0) {
-            await deps.archiveItemVariantAsync(codeSampleItemCodename);
-        }
-    }
-}
-
-async function updateCodeSampleInfoAsync(codeSamplesList) {
-    for (const codeSample of codeSamplesList) {
-        switch (codeSample.status) {
-            case 'added':
-            case 'modified':
-                await upsertCodeSampleInfoAsync(codeSample.codename, codeSample.identifier);
-                break;
-
-            case 'deleted':
-                await archiveCodeSampleInfoAsync(codeSample.codename, codeSample.identifier);
-                break;
-
-            default:
-                throw new Error('Unexpected value of the codeSample status!')
+            await deps.kenticoCloudService.archiveItemVariantAsync(codeSampleItemCodename);
         }
     }
 }
@@ -53,7 +31,7 @@ async function updateCodeSampleInfoAsync(codeSamplesList) {
 async function upsertCodeSamplesItemAsync(codeSampleItemCodename, codeSamplesLinkedItems) {
     const codeSamplesItem = prepareCodeSamplesItem(codeSampleItemCodename);
 
-    await kenticoCloudService.upsertItemAsync(
+    await kenticoCloudService.addItemAsync(
         codeSampleItemCodename,
         codeSamplesItem
     );
@@ -99,7 +77,6 @@ function transformCodenamesToLinkItems(codenames) {
 }
 
 module.exports = {
-    updateCodeSampleInfoAsync,
-    updateCodeSamplesItemAsync,
-    updateCodeSamplesItemAsyncFactory,
+    manageCodeSamplesAsync,
+    manageCodeSamplesAsyncFactory,
 };

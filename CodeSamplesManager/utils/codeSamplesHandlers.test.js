@@ -1,9 +1,12 @@
-const { updateCodeSamplesItemAsyncFactory } = require('./codeSamplesHandlers');
+const { manageCodeSamplesAsyncFactory } = require('./codeSamplesHandlers');
 
 describe('CodeSamplesHandlers', () => {
-    describe('updateCodeSamplesItemAsync', () => {
+    describe('manageCodeSamplesAsync', () => {
         it('archive code samples if all linked code sample items are archived.', async () => {
             const codename = 'test';
+            const mockService = {
+                archiveItemVariantAsync: jest.fn(),
+            };
             const mockDependencies = {
                 getCodeSampleInfoAsync: () => [
                     { Status: { '_': 'archived' }, RowKey: { '_': `${codename}_rest` } },
@@ -11,12 +14,12 @@ describe('CodeSamplesHandlers', () => {
                     { Status: { '_': 'archived' }, RowKey: { '_': `${codename}_java` } },
                 ],
                 upsertCodeSamplesItemAsync: jest.fn(),
-                archiveItemVariantAsync: jest.fn(),
+                kenticoCloudService: mockService,
             };
 
-            await updateCodeSamplesItemAsyncFactory(mockDependencies)(codename);
+            await manageCodeSamplesAsyncFactory(mockDependencies)(codename);
 
-            expect(mockDependencies.archiveItemVariantAsync).toHaveBeenCalledWith(codename);
+            expect(mockDependencies.kenticoCloudService.archiveItemVariantAsync).toHaveBeenCalledWith(codename);
             expect(mockDependencies.upsertCodeSamplesItemAsync).not.toHaveBeenCalledWith();
         });
 
@@ -27,6 +30,9 @@ describe('CodeSamplesHandlers', () => {
                 `${codename}_net`,
                 `${codename}_java`,
             ];
+            const mockService = {
+                archiveItemVariantAsync: jest.fn(),
+            };
             const mockDependencies = {
                 getCodeSampleInfoAsync: () => [
                     { Status: { '_': 'active' }, RowKey: { '_': `${codename}_rest` } },
@@ -34,12 +40,12 @@ describe('CodeSamplesHandlers', () => {
                     { Status: { '_': 'archived' }, RowKey: { '_': `${codename}_java` } },
                 ],
                 upsertCodeSamplesItemAsync: jest.fn(),
-                archiveItemVariantAsync: jest.fn(),
+                kenticoCloudService: mockService,
             };
 
-            await updateCodeSamplesItemAsyncFactory(mockDependencies)(codename);
+            await manageCodeSamplesAsyncFactory(mockDependencies)(codename);
 
-            expect(mockDependencies.archiveItemVariantAsync).not.toHaveBeenCalledWith();
+            expect(mockDependencies.kenticoCloudService.archiveItemVariantAsync).not.toHaveBeenCalledWith();
             expect(mockDependencies.upsertCodeSamplesItemAsync).toHaveBeenCalledWith(codename, linkedCodeSampleItems);
         });
 
@@ -50,6 +56,9 @@ describe('CodeSamplesHandlers', () => {
                 `${codename}_net`,
                 `${codename}_java`,
             ];
+            const mockService = {
+                archiveItemVariantAsync: jest.fn(),
+            };
             const mockDependencies = {
                 getCodeSampleInfoAsync: () => [
                     { Status: { '_': 'active' }, RowKey: { '_': `${codename}_rest` } },
@@ -57,12 +66,12 @@ describe('CodeSamplesHandlers', () => {
                     { Status: { '_': 'archived' }, RowKey: { '_': `${codename}_java` } },
                 ],
                 upsertCodeSamplesItemAsync: jest.fn(),
-                archiveItemVariantAsync: jest.fn(),
+                kenticoCloudService: mockService,
             };
 
-            await updateCodeSamplesItemAsyncFactory(mockDependencies)(codename);
+            await manageCodeSamplesAsyncFactory(mockDependencies)(codename);
 
-            expect(mockDependencies.archiveItemVariantAsync).not.toHaveBeenCalledWith();
+            expect(mockDependencies.kenticoCloudService.archiveItemVariantAsync).not.toHaveBeenCalledWith();
             expect(mockDependencies.upsertCodeSamplesItemAsync).toHaveBeenCalledWith(codename, linkedCodeSampleItems);
         });
     });
