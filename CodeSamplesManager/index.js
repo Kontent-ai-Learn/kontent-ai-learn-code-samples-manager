@@ -2,10 +2,8 @@ const {
     setupAzureStorage,
     setupKenticoCloud,
 } = require('../shared/external/configuration');
-const {
-    updateCodeSampleInfoAsync,
-    updateCodeSamplesItemAsync,
-} = require('./utils/codeSamplesHandlers');
+const { manageCodeSamplesAsync } = require('./utils/codeSamplesHandlers');
+const { manageCodeSampleInfoAsync } = require('./utils/codeSamplesInfoServices');
 
 module.exports = async function (context) {
     try {
@@ -17,8 +15,8 @@ module.exports = async function (context) {
         if (codeSamplesList.length !== 0) {
             const codeSamplesItemCodename = codeSamplesList[0].identifier;
 
-            await updateCodeSampleInfoAsync(codeSamplesList);
-            await updateCodeSamplesItemAsync(codeSamplesItemCodename);
+            await manageCodeSampleInfoAsync(codeSamplesList);
+            await manageCodeSamplesAsync(codeSamplesItemCodename);
         }
     } catch (error) {
         /** This try-catch is required for correct logging of exceptions in Azure */
