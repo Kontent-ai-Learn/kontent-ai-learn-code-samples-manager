@@ -1,12 +1,17 @@
 const { getContentManagementClient } = require('../../utils/getContentManagementClient');
 const { DEFAULT_LANGUAGE_ID } = require('../../utils/constants');
 const { configuration } = require('../../external/configuration');
+const {
+    ITEM_NOT_FOUND_ERROR_CODE,
+    LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE,
+} = require('../../utils/constants');
 
 function viewItemAsync(codename) {
     return getContentManagementClient()
         .viewContentItem()
         .byItemCodename(codename)
-        .toPromise();
+        .toPromise()
+        .catch(error => handleNotFoundError(error, ITEM_NOT_FOUND_ERROR_CODE));
 }
 
 function addItemAsync(item) {
@@ -55,7 +60,8 @@ function viewVariantAsync(codename) {
         .viewLanguageVariant()
         .byItemCodename(codename)
         .byLanguageId(DEFAULT_LANGUAGE_ID)
-        .toPromise();
+        .toPromise()
+        .catch(error => handleNotFoundError(error, LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE));
 }
 
 function unpublishVariantAsync(codename) {
@@ -64,6 +70,14 @@ function unpublishVariantAsync(codename) {
         .byItemCodename(codename)
         .byLanguageId(DEFAULT_LANGUAGE_ID)
         .toPromise();
+}
+
+function handleNotFoundError(error, expectedNotFoundErrorCode) {
+    if (error.errorCode === expectedNotFoundErrorCode) {
+        return null;
+    }
+
+    throw error;
 }
 
 module.exports = {

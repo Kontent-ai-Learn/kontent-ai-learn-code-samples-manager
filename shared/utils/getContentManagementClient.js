@@ -5,7 +5,10 @@ function getContentManagementClient() {
     return new ContentManagementClient({
         projectId: configuration.kenticoProjectId,
         apiKey: configuration.kenticoContentManagementApiKey,
-        retryStatusCodes: [429, 500]
+        /* Ensures we don't hit the requests per minute API limit */
+        retryAttempts: 9,
+        /* To ensure we retry correct refused requests. */
+        retryStatusCodes: [408, 429, 500, 502, 503, 504],
     });
 }
 

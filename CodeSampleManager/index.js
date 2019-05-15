@@ -1,7 +1,8 @@
 const { setupKenticoCloud } = require('../shared/external/configuration');
 const {
-    upsertCodeSampleAsync,
-    archiveCodeSampleAsync,
+    addCodeSampleAsync,
+    upsertCodeSampleVariantAsync,
+    archiveCodeSampleVariantAsync,
 } = require('./utils/codeSampleHandlers');
 
 module.exports = async function (context) {
@@ -20,12 +21,15 @@ async function processCodeSampleItems(codeFragments) {
     for (const codeFragment of codeFragments) {
         switch (codeFragment.status) {
             case 'added':
+                await addCodeSampleAsync(codeFragment);
+                break;
+
             case 'modified':
-                await upsertCodeSampleAsync(codeFragment);
+                await upsertCodeSampleVariantAsync(codeFragment);
                 break;
 
             case 'deleted':
-                await archiveCodeSampleAsync(codeFragment.codename);
+                await archiveCodeSampleVariantAsync(codeFragment.codename);
                 break;
 
             default:

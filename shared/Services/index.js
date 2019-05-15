@@ -1,72 +1,54 @@
 const {
-    upsertItemVariantAsyncFactory,
+    addItemAsyncFactory,
     archiveItemVariantAsyncFactory,
     unpublishVariantAsyncFactory,
-    createItemVariantAsyncFactory,
-    updateVariantAsyncFactory,
-    viewItemAsyncFactory,
+    prepareVariantForUpsertAsyncFactory,
     isVariantPublishedAsyncFactory,
     isVariantArchivedAsyncFactory,
     checkVariantWorkflowStepFactory,
+    upsertVariantAsyncFactory,
 } = require('./Internal/KenticoCloudServices');
 
 const kenticoCloudClient = require('./Clients/KenticoCloudClient');
 const { configuration } = require('../external/configuration');
 
-const createItemVariantAsync = createItemVariantAsyncFactory({
-    kenticoCloudClient,
-});
-
-const checkVariantWorkflowStep = checkVariantWorkflowStepFactory({
-    kenticoCloudClient,
-});
+const checkVariantWorkflowStep = checkVariantWorkflowStepFactory(kenticoCloudClient);
 
 const isVariantArchivedAsync = isVariantArchivedAsyncFactory({
-    kenticoCloudClient,
-    configuration,
     checkVariantWorkflowStep,
+    configuration,
 });
 
 const isVariantPublishedAsync = isVariantPublishedAsyncFactory({
-    kenticoCloudClient,
-    configuration,
     checkVariantWorkflowStep,
+    configuration,
 });
 
 const unpublishVariantAsync = unpublishVariantAsyncFactory({
     kenticoCloudClient,
-    configuration,
     isVariantPublishedAsync,
 });
 
-const updateVariantAsync = updateVariantAsyncFactory({
+const prepareVariantForUpsertAsync = prepareVariantForUpsertAsyncFactory({
     kenticoCloudClient,
-    configuration,
     isVariantPublishedAsync,
     isVariantArchivedAsync,
 });
 
-const viewItemAsync = viewItemAsyncFactory({
-    kenticoCloudClient,
-});
-
 const archiveItemVariantAsync = archiveItemVariantAsyncFactory({
     kenticoCloudClient,
-    configuration,
-    viewItemAsync,
     unpublishVariantAsync,
 });
 
-const upsertItemVariantAsync = upsertItemVariantAsyncFactory({
+const addItemAsync = addItemAsyncFactory(kenticoCloudClient);
+
+const upsertVariantAsync = upsertVariantAsyncFactory({
     kenticoCloudClient,
-    configuration,
-    viewItemAsync,
-    createItemVariantAsync,
-    updateVariantAsync,
+    prepareVariantForUpsertAsync,
 });
 
 module.exports = {
-    upsertItemVariantAsync,
+    addItemAsync,
+    upsertVariantAsync,
     archiveItemVariantAsync,
-    viewItemAsync,
 };

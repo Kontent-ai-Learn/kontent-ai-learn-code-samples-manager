@@ -1,89 +1,76 @@
-const { LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE } = require('../../utils/constants');
-
-function upsertItemVariantAsyncFactory(deps) {
-    return async function (codename, item, variant) {
-        const retrievedItem = await deps.viewItemAsync(codename);
+function addItemAsyncFactory(kenticoCloudClient) {
+    return async function (codename, item) {
+        const retrievedItem = await kenticoCloudClient.viewItemAsync(codename);
 
         if (retrievedItem === null) {
-            await deps.createItemVariantAsync(codename, item, variant);
-        } else {
-            await deps.updateVariantAsync(codename, variant);
+            await kenticoCloudClient.addItemAsync(item);
         }
     };
 }
 
-function archiveItemVariantAsyncFactory(deps) {
-    return async function (codename) {
-        const existingItem = await deps.viewItemAsync(codename);
-
-        if (existingItem) {
-            await deps.unpublishVariantAsync(codename);
-            await deps.kenticoCloudClient.archiveVariantAsync(codename);
-        }
-    }
-}
-
-function unpublishVariantAsyncFactory(deps) {
-    return async function (codename) {
-        const isPublished = await deps.isVariantPublishedAsync(codename);
-
-        if (isPublished) {
-            await deps.kenticoCloudClient.unpublishVariantAsync(codename);
-        }
-    }
-}
-
-function createItemVariantAsyncFactory({ kenticoCloudClient }) {
-    return async function (codename, item, itemVariant) {
-        await kenticoCloudClient.addItemAsync(item);
-        await kenticoCloudClient.upsertVariantAsync(codename, itemVariant);
-    }
-}
-
-function updateVariantAsyncFactory(deps) {
+function upsertVariantAsyncFactory({ kenticoCloudClient, prepareVariantForUpsertAsync }) {
     return async function (codename, variant) {
+        const retrievedVariant = await kenticoCloudClient.viewVariantAsync(codename);
+
+        if (retrievedVariant !== null) {
+            await prepareVariantForUpsertAsync(codename);
+        }
+
+        await kenticoCloudClient.upsertVariantAsync(codename, variant)
+    }
+}
+
+function prepareVariantForUpsertAsyncFactory(deps) {
+    return async function (codename) {
+        const kenticoCloudClient = deps.kenticoCloudClient;
+
         const isPublished = await deps.isVariantPublishedAsync(codename);
         const isArchived = await deps.isVariantArchivedAsync(codename);
 
         if (isPublished) {
-            await deps.kenticoCloudClient.createNewVersionAsync(codename);
+            await kenticoCloudClient.createNewVersionAsync(codename);
         }
 
         if (isArchived) {
-            await deps.kenticoCloudClient.changeVariantWorkflowStepToCopywritingAsync(codename);
-        }
-
-        await deps.kenticoCloudClient.upsertVariantAsync(codename, variant)
-    }
-}
-
-function viewItemAsyncFactory({ kenticoCloudClient }) {
-    return async function (codename) {
-        try {
-            return await kenticoCloudClient.viewItemAsync(codename);
-        } catch (error) {
-            if (error.errorCode === LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE) {
-                return null;
-            }
-
-            throw error;
+            await kenticoCloudClient.changeVariantWorkflowStepToCopywritingAsync(codename);
         }
     }
 }
 
-function isVariantPublishedAsyncFactory(deps) {
+function archiveItemVariantAsyncFactory({ kenticoCloudClient, unpublishVariantAsync }) {
     return async function (codename) {
-        return deps.checkVariantWorkflowStep(codename, deps.configuration.publishedStepId);
+        const existingItem = await kenticoCloudClient.viewItemAsync(codename);
+
+        if (existingItem) {
+            await unpublishVariantAsync(codename);
+            await kenticoCloudClient.archiveVariantAsync(codename);
+        }
     }
 }
 
-function isVariantArchivedAsyncFactory(deps) {
+function unpublishVariantAsyncFactory({ kenticoCloudClient, isVariantPublishedAsync }) {
     return async function (codename) {
-        return deps.checkVariantWorkflowStep(codename, deps.configuration.archivedStepId);
+        const isPublished = await isVariantPublishedAsync(codename);
+
+        if (isPublished) {
+            await kenticoCloudClient.unpublishVariantAsync(codename);
+        }
     }
 }
 
-function checkVariantWorkflowStepFactory({ kenticoCloudClient }) {
+function isVariantPublishedAsyncFactory({ checkVariantWorkflowStep, configuration }) {
+    return async function (codename) {
+        return checkVariantWorkflowStep(codename, configuration.publishedStepId);
+    }
+}
+
+function isVariantArchivedAsyncFactory({ checkVariantWorkflowStep, configuration }) {
+    return async function (codename) {
+        return checkVariantWorkflowStep(codename, configuration.archivedStepId);
+    }
+}
+
+function checkVariantWorkflowStepFactory(kenticoCloudClient) {
     return async function (codename, checkedStepId) {
         const item = await kenticoCloudClient.viewVariantAsync(codename);
 
@@ -92,12 +79,11 @@ function checkVariantWorkflowStepFactory({ kenticoCloudClient }) {
 }
 
 module.exports = {
-    upsertItemVariantAsyncFactory,
+    addItemAsyncFactory,
+    upsertVariantAsyncFactory,
     archiveItemVariantAsyncFactory,
     unpublishVariantAsyncFactory,
-    createItemVariantAsyncFactory,
-    updateVariantAsyncFactory,
-    viewItemAsyncFactory,
+    prepareVariantForUpsertAsyncFactory,
     isVariantPublishedAsyncFactory,
     isVariantArchivedAsyncFactory,
     checkVariantWorkflowStepFactory,

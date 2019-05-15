@@ -1,54 +1,49 @@
 const { ACTIVE_CODE_SAMPLE_INFO } = require('../../shared/utils/constants');
 const kenticoCloudService = require('../../shared/Services');
-const {
-    upsertCodeSampleInfoAsync,
+const { getCodeSampleInfoAsync } = require('./azureTableService');
+
+const manageCodeSamplesAsync = manageCodeSamplesAsyncFactory({
     getCodeSampleInfoAsync,
-    archiveCodeSampleInfoAsync,
-} = require('./azureTableService');
+    upsertCodeSamplesItemAsync,
+    kenticoCloudService,
+});
 
-async function updateCodeSamplesItemAsync(codeSampleItemCodename) {
-    const codeSampleItemsInfo = await getCodeSampleInfoAsync(codeSampleItemCodename);
+function manageCodeSamplesAsyncFactory(deps) {
+    return async function (codeSampleItemCodename) {
+        const codeSampleItemsInfo = await deps.getCodeSampleInfoAsync(codeSampleItemCodename);
 
-    const notArchivedCodeSamplesLinkedItems = codeSampleItemsInfo
-        .filter(entity => entity.Status['_'] === ACTIVE_CODE_SAMPLE_INFO);
+        const notArchivedCodeSamplesLinkedItems = codeSampleItemsInfo
+            .filter(entity => entity.Status['_'] === ACTIVE_CODE_SAMPLE_INFO);
 
-    const codeSamplesLinkedItems = codeSampleItemsInfo
-        .map(entity => entity.RowKey['_']);
+        const codeSamplesLinkedItems = codeSampleItemsInfo
+            .map(entity => entity.RowKey['_']);
 
-    if (codeSamplesLinkedItems.length > 1) {
-        await upsertCodeSamplesItemVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems);
-    }
+        if (codeSamplesLinkedItems.length > 1) {
+            await deps.upsertCodeSamplesItemAsync(codeSampleItemCodename, codeSamplesLinkedItems);
+        }
 
-    if (notArchivedCodeSamplesLinkedItems.length === 0) {
-        await kenticoCloudService.archiveItemVariantAsync(codeSampleItemCodename);
-    }
-}
-
-async function updateCodeSampleInfoAsync(codeSamplesList) {
-    for (const codeSample of codeSamplesList) {
-        switch (codeSample.status) {
-            case 'added':
-            case 'modified':
-                await upsertCodeSampleInfoAsync(codeSample.codename, codeSample.identifier);
-                break;
-
-            case 'deleted':
-                await archiveCodeSampleInfoAsync(codeSample.codename, codeSample.identifier);
-                break;
-
-            default:
-                throw new Error('Unexpected value of the codeSample status!')
+        if (notArchivedCodeSamplesLinkedItems.length === 0) {
+            await deps.kenticoCloudService.archiveItemVariantAsync(codeSampleItemCodename);
         }
     }
 }
 
-async function upsertCodeSamplesItemVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems) {
+async function upsertCodeSamplesItemAsync(codeSampleItemCodename, codeSamplesLinkedItems) {
     const codeSamplesItem = prepareCodeSamplesItem(codeSampleItemCodename);
+
+    await kenticoCloudService.addItemAsync(
+        codeSampleItemCodename,
+        codeSamplesItem
+    );
+
+    await upsertCodeSamplesVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems);
+}
+
+async function upsertCodeSamplesVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems) {
     const codeSamplesVariant = prepareCodeSamplesVariant(codeSamplesLinkedItems);
 
-    await kenticoCloudService.upsertItemVariantAsync(
+    await kenticoCloudService.upsertVariantAsync(
         codeSampleItemCodename,
-        codeSamplesItem,
         codeSamplesVariant,
     );
 }
@@ -82,6 +77,6 @@ function transformCodenamesToLinkItems(codenames) {
 }
 
 module.exports = {
-    updateCodeSampleInfoAsync,
-    updateCodeSamplesItemAsync,
+    manageCodeSamplesAsync,
+    manageCodeSamplesAsyncFactory,
 };
