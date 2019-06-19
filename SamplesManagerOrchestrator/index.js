@@ -21,6 +21,17 @@ function handleError(error) {
    throw `Message: ${error.message} \nStack Trace: ${error.stack}`;
 }
 
+function * processFragments(context, codeFragments, chunkSize) {
+    for (const codeFragmentsByIdentifier of codeFragments) {
+        for (let i = 0; i < codeFragmentsByIdentifier.length; i = i + chunkSize) {
+            const codeFragmentsChunk = codeFragmentsByIdentifier.slice(i, i + chunkSize);
+
+            yield context.df.callActivity('CodeSampleManager', codeFragmentsChunk);
+            yield context.df.callActivity('CodeSamplesManager', codeFragmentsChunk);
+        }
+    }
+}
+
 module.exports = df.orchestrator(function * (context) {
     setupOrchestrator();
 
@@ -32,14 +43,7 @@ module.exports = df.orchestrator(function * (context) {
             yield context.df.callActivity('CleanCodeSampleInfo');
         }
 
-        for (const codeFragmentsByIdentifier of blobStorageData.codeFragments) {
-            for (let i = 0; i < codeFragmentsByIdentifier.length; i = i + chunkSize) {
-                const codeFragmentsChunk = codeFragmentsByIdentifier.slice(i, i + chunkSize);
-
-                yield context.df.callActivity('CodeSampleManager', codeFragmentsChunk);
-                yield context.df.callActivity('CodeSamplesManager', codeFragmentsChunk);
-            }
-        }
+        yield * processFragments(context, blobStorageData.codeFragments, chunkSize);
 
         sendNotification(
             'Samples manager finished successfully.',
