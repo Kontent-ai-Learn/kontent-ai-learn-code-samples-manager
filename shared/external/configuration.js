@@ -6,12 +6,12 @@ const {
 const configuration = {
     kenticoProjectId: '',
     kenticoContentManagementApiKey: '',
-    azureStorageAccount: '',
-    azureStorageAccessKey: '',
+    azureConnectionString: '',
     copywritingStepId: '',
     publishedStepId: '',
     archivedStepId: '',
     chunkSize: '',
+    notifierEndpoint: '',
 };
 
 const getEnvironmentVariable = (variableName) =>
@@ -19,6 +19,7 @@ const getEnvironmentVariable = (variableName) =>
 
 function setupOrchestrator() {
     configuration.chunkSize = getEnvironmentVariable('ChunkSize');
+    configuration.notifierEndpoint = getEnvironmentVariable('Notifier.Endpoint')
 }
 
 function setupKenticoCloud() {
