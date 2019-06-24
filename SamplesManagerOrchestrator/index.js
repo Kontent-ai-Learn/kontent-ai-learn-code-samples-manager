@@ -44,12 +44,6 @@ module.exports = df.orchestrator(function * (context) {
         }
 
         yield * processFragments(context, blobStorageData.codeFragments, chunkSize);
-
-        sendNotification(
-            'Samples manager finished successfully.',
-            'success',
-            'Sample manager finished successfully. Code between GitHub and Kentico Cloud is synchronized.'
-        );
     } catch (error) {
         handleError(error);
     }
