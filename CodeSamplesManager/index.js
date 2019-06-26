@@ -1,13 +1,10 @@
-const {
-    setupAzureStorage,
-    setupKenticoCloud,
-} = require('../shared/external/configuration');
+const Configuration = require('../shared/external/configuration');
 const { manageCodeSamplesAsync } = require('./utils/codeSamplesHandlers');
 const { manageCodeSampleInfoAsync } = require('./utils/codeSamplesInfoServices');
 
 module.exports = async function (context) {
-    setupAzureStorage();
-    setupKenticoCloud();
+    await Configuration.setupAzureStorage();
+    Configuration.setupKenticoCloud();
 
     const codeSamplesList = context.bindingData.codeSamplesList;
 
@@ -18,11 +15,10 @@ module.exports = async function (context) {
             await manageCodeSampleInfoAsync(codeSamplesList);
             await manageCodeSamplesAsync(codeSamplesItemCodename);
         } catch (error) {
-            throw {
-                message: error.message,
-                stack: error.stack,
-                codename: codeSamplesItemCodename,
-            };
+            /** This try-catch is required for correct logging of exceptions in Azure */
+            throw `message: ${error.message},
+                stack: ${error.stack},
+                codename: ${codeSamplesItemCodename}`;
         }
     }
 };

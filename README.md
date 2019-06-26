@@ -37,6 +37,10 @@ Samples Manager responds to changes in the stored code samples in [Azure Blob St
 * `KC.Step.ArchivedId` - Archived workflow step ID
 * `Azure.ConnectionString` - Connection string for the Azure Storage account
 * `ChunkSize` - Amount of code samples processed in a call of a single function
+* `EventGrid.Notification.Key` - Key for notification eventGrid topic
+* `EventGrid.Notification.Endpoint` - Url for notification eventGrid topic
+
+
 
 ## Testing
 * Run `yarn run test` in the terminal.
