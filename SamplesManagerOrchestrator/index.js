@@ -1,19 +1,31 @@
-const axios = require('axios');
+const { TopicCredentials } = require('ms-rest-azure');
+const { EventGridClient } = require('azure-eventgrid');
+const Configuration = require('../shared/external/configuration');
+const {
+    publishEventsCreator,
+    eventComposer,
+} = require('./utils/eventGridClient');
 const df = require('durable-functions');
-const { configuration, setupOrchestrator } = require('../shared/external/configuration');
 
-function sendNotification(activityTitle, mode, text) {
-    axios.post(configuration.notifierEndpoint, {
-        activityTitle,
-        mode,
-        text,
-    });
+async function sendNotification(activityTitle, text) {
+    const eventGridKey = process.env['EventGrid.Notification.Key'];
+    const host = process.env['EventGrid.Notification.Endpoint'];
+
+    if (!eventGridKey || !host) {
+        throw new Error('Undefined env property provided');
+    }
+
+    const topicCredentials = new TopicCredentials(eventGridKey);
+    const eventGridClient = new EventGridClient(topicCredentials);
+    const publishEvents = publishEventsCreator({ eventGridClient, host });
+
+    const event = eventComposer(activityTitle, text);
+    await publishEvents([event]);
 }
 
-function handleError(error) {
-    sendNotification(
+async function handleError(error) {
+    await sendNotification(
         'Samples manager failed.',
-        'error',
         `Sample manager failed while processing item with codename ${error.codename}. Message: ${error.message}`
     );
 
@@ -33,10 +45,10 @@ function * processFragments(context, codeFragments, chunkSize) {
 }
 
 module.exports = df.orchestrator(function * (context) {
-    setupOrchestrator();
+    Configuration.setupOrchestrator();
 
     try {
-        const chunkSize = configuration.chunkSize;
+        const chunkSize = Configuration.chunkSize;
         const blobStorageData = yield context.df.callActivity('PrepareCodeFragments', context.bindingData.input);
 
         if (blobStorageData.mode === 'initialize') {
@@ -45,6 +57,6 @@ module.exports = df.orchestrator(function * (context) {
 
         yield * processFragments(context, blobStorageData.codeFragments, chunkSize);
     } catch (error) {
-        handleError(error);
+        yield handleError(error);
     }
 });
