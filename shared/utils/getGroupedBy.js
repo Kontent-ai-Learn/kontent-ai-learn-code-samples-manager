@@ -16,4 +16,4 @@ function getGroupedBy(elements, key) {
 
 module.exports = {
     getGroupedBy,
-}
+};

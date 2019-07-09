@@ -1,8 +1,8 @@
-const { configuration } = require('../../shared/external/configuration');
+const Configuration = require('../../shared/external/configuration');
 const azure = require('azure-storage');
 
 async function loadDataFromBlobStorage(url) {
-    const blobService = azure.createBlobService(configuration.azureConnectionString);
+    const blobService = azure.createBlobService(Configuration.azureConnectionString);
 
     const data = await readBlob(blobService, parseBlobUrl(url));
 

@@ -10,18 +10,18 @@ const {
 } = require('./Internal/KenticoCloudServices');
 
 const kenticoCloudClient = require('./Clients/KenticoCloudClient');
-const { configuration } = require('../external/configuration');
+const Configuration = require('../external/configuration');
 
 const checkVariantWorkflowStep = checkVariantWorkflowStepFactory(kenticoCloudClient);
 
 const isVariantArchivedAsync = isVariantArchivedAsyncFactory({
     checkVariantWorkflowStep,
-    configuration,
+    configuration: Configuration,
 });
 
 const isVariantPublishedAsync = isVariantPublishedAsyncFactory({
     checkVariantWorkflowStep,
-    configuration,
+    configuration: Configuration,
 });
 
 const unpublishVariantAsync = unpublishVariantAsyncFactory({

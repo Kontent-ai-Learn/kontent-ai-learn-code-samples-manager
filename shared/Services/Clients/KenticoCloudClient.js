@@ -1,6 +1,6 @@
 const { getContentManagementClient } = require('../../utils/getContentManagementClient');
 const { DEFAULT_LANGUAGE_ID } = require('../../utils/constants');
-const { configuration } = require('../../external/configuration');
+const Configuration = require('../../external/configuration');
 const {
     ITEM_NOT_FOUND_ERROR_CODE,
     LANGUAGE_VARIANT_NOT_FOUND_ERROR_CODE,
@@ -22,11 +22,11 @@ function addItemAsync(item) {
 }
 
 function archiveVariantAsync(codename) {
-    return changeWorkflowStepOfVariantAsync(codename, configuration.archivedStepId);
+    return changeWorkflowStepOfVariantAsync(codename, Configuration.archivedStepId);
 }
 
 function changeVariantWorkflowStepToCopywritingAsync(codename) {
-    return changeWorkflowStepOfVariantAsync(codename, configuration.copywritingStepId);
+    return changeWorkflowStepOfVariantAsync(codename, Configuration.copywritingStepId);
 }
 
 function changeWorkflowStepOfVariantAsync(codename, workflowStepId) {

@@ -1,4 +1,4 @@
-const { setupKenticoCloud } = require('../shared/external/configuration');
+const Configuration = require('../shared/external/configuration');
 const {
     addCodeSampleAsync,
     upsertCodeSampleVariantAsync,
@@ -6,19 +6,16 @@ const {
 } = require('./utils/codeSampleHandlers');
 
 module.exports = async function (context) {
-    try {
-        const codeFragments = context.bindingData.codeFragments;
+    const codeFragments = context.bindingData.codeFragments;
+    Configuration.setupKenticoCloud();
 
-        setupKenticoCloud();
-        await processCodeSampleItems(codeFragments);
-    } catch (error) {
-        /** This try-catch is required for correct logging of exceptions in Azure */
-        throw `Message: ${error.message} \nStack Trace: ${error.stack}`;
+    for (const codeFragment of codeFragments) {
+        await processCodeSampleItem(codeFragment);
     }
 };
 
-async function processCodeSampleItems(codeFragments) {
-    for (const codeFragment of codeFragments) {
+async function processCodeSampleItem(codeFragment) {
+    try {
         switch (codeFragment.status) {
             case 'added':
                 await addCodeSampleAsync(codeFragment);
@@ -33,7 +30,12 @@ async function processCodeSampleItems(codeFragments) {
                 break;
 
             default:
-                throw new Error('Unexpected value of the codeFragment status!')
+                throw 'Unexpected value of the codeFragment status!';
         }
+    } catch (error) {
+        /** This try-catch is required for correct logging of exceptions in Azure */
+        throw `message: ${error.message},
+                stack: ${error.stack},
+                codename: ${codeFragment.codename}`;
     }
 }
