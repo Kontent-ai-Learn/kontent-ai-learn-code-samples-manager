@@ -7,7 +7,7 @@ const {
 
 module.exports = async function (context) {
     const codeFragments = context.bindingData.codeFragments;
-    Configuration.setupKenticoCloud();
+    Configuration.setupKenticoKontent();
 
     for (const codeFragment of codeFragments) {
         await processCodeSampleItem(codeFragment);

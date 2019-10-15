@@ -9,7 +9,7 @@ class Configuration {
         Configuration.notifierEndpoint = getEnvironmentVariable('Notifier.Endpoint');
     }
 
-    static setupKenticoCloud() {
+    static setupKenticoKontent() {
         Configuration.kenticoProjectId = getEnvironmentVariable('KC.ProjectId');
         Configuration.kenticoContentManagementApiKey = getEnvironmentVariable('KC.ContentManagementApiKey');
         Configuration.copywritingStepId = getEnvironmentVariable('KC.Step.CopywritingId');
