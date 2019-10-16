@@ -1,21 +1,21 @@
 {
-  "name": "kentico-cloud-docs-samples-manager",
+  "name": "kontent-docs-samples-manager",
   "version": "1.0.0",
-  "description": "Kentico Cloud documentation - Samples Manager",
+  "description": "Kentico Kontent documentation - Samples Manager",
   "scripts": {
     "test": "jest",
     "eslint": "npx eslint ."
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kentico/kentico-cloud-docs-samples-manager"
+    "url": "https://github.com/KenticoDocs/kontent-docs-samples-manager"
   },
   "author": "Kentico",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Kentico/kentico-cloud-docs-samples-manager/issues"
+    "url": "https://github.com/KenticoDocs/kontent-docs-samples-manager/issues"
   },
-  "homepage": "https://github.com/Kentico/kentico-cloud-docs-samples-manager#readme",
+  "homepage": "https://github.com/KenticoDocs/kontent-docs-samples-manager#readme",
   "dependencies": {
     "axios": "^0.19.0",
     "azure-eventgrid": "^1.5.0",

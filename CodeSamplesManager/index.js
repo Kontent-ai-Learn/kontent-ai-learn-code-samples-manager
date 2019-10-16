@@ -4,7 +4,7 @@ const { manageCodeSampleInfoAsync } = require('./utils/codeSamplesInfoServices')
 
 module.exports = async function (context) {
     await Configuration.setupAzureStorage();
-    Configuration.setupKenticoCloud();
+    Configuration.setupKenticoKontent();
 
     const codeSamplesList = context.bindingData.codeSamplesList;
 
