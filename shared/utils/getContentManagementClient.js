@@ -7,7 +7,7 @@ function getContentManagementClient() {
         apiKey: Configuration.kenticoContentManagementApiKey,
         retryStrategy: {
             addJitter: true,
-            canRetryError: (error) => true, // retry all errors
+            canRetryError: () => true, // retry all errors
             maxAttempts: 9,
             deltaBackoffMs: 1000,
             maxCumulativeWaitTimeMs: 180000 // 3 minutes

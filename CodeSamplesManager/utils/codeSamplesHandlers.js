@@ -13,10 +13,10 @@ function manageCodeSamplesAsyncFactory(deps) {
         const codeSampleItemsInfo = await deps.getCodeSampleInfoAsync(codeSampleItemCodename);
 
         const notArchivedCodeSamplesLinkedItems = codeSampleItemsInfo
-            .filter(entity => entity.Status['_'] === ACTIVE_CODE_SAMPLE_INFO);
+            .filter(entity => entity.Status._ === ACTIVE_CODE_SAMPLE_INFO);
 
         const codeSamplesLinkedItems = codeSampleItemsInfo
-            .map(entity => entity.RowKey['_']);
+            .map(entity => entity.RowKey._);
 
         if (codeSamplesLinkedItems.length > 1) {
             await deps.upsertCodeSamplesItemAsync(codeSampleItemCodename, codeSamplesLinkedItems);

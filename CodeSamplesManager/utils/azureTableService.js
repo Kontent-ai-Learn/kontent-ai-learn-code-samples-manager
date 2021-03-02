@@ -53,9 +53,9 @@ function executeQueryCodeSampleInfo(identifier) {
 
 function prepareCodeSampleInfo(identifier, codename, status) {
     return {
-        PartitionKey: { '_': identifier },
-        RowKey: { '_': codename },
-        Status: { '_': status },
+        PartitionKey: { _: identifier },
+        RowKey: { _: codename },
+        Status: { _: status },
     };
 }
 
