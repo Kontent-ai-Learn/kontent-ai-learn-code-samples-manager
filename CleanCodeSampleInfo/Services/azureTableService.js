@@ -1,7 +1,7 @@
 const azure = require('azure-storage');
 const {
-    deleteCodeSampleInfoAsync,
-    queryCodeSampleInfoAsync,
+    deleteCodeSampleInfo,
+    queryCodeSampleInfo,
 } = require('../../shared/Services/Clients/TableServiceClient');
 
 async function deleteAllEntities() {
@@ -13,17 +13,17 @@ async function deleteAllEntities() {
 }
 
 function getAllEntities() {
-    return new Promise((resolve, reject) => queryCodeSampleInfoAsync(resolve, reject, new azure.TableQuery()));
+    return new Promise((resolve, reject) => queryCodeSampleInfo(resolve, reject, new azure.TableQuery()));
 }
 
 function deleteEntity(rowKey, partitionKey) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         const info = {
             PartitionKey: partitionKey,
             RowKey: rowKey,
         };
 
-        await deleteCodeSampleInfoAsync(resolve, reject, info);
+        deleteCodeSampleInfo(resolve, reject, info);
     });
 }
 

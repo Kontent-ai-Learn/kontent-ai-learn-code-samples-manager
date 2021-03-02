@@ -1,6 +1,6 @@
 const {
-    upsertCodeSampleInfoAsync,
-    archiveCodeSampleInfoAsync,
+    upsertCodeSampleInfoPromise,
+    archiveCodeSampleInfoPromise,
 } = require('./azureTableService');
 
 async function manageCodeSampleInfoAsync(codeSamplesList) {
@@ -8,11 +8,11 @@ async function manageCodeSampleInfoAsync(codeSamplesList) {
         switch (codeSample.status) {
             case 'added':
             case 'modified':
-                await upsertCodeSampleInfoAsync(codeSample.codename, codeSample.identifier);
+                await upsertCodeSampleInfoPromise(codeSample.codename, codeSample.identifier);
                 break;
 
             case 'deleted':
-                await archiveCodeSampleInfoAsync(codeSample.codename, codeSample.identifier);
+                await archiveCodeSampleInfoPromise(codeSample.codename, codeSample.identifier);
                 break;
 
             default:

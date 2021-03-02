@@ -1,16 +1,16 @@
 const { ACTIVE_CODE_SAMPLE_INFO } = require('../../shared/utils/constants');
 const kenticoCloudService = require('../../shared/Services');
-const { getCodeSampleInfoAsync } = require('./azureTableService');
+const { getCodeSampleInfoPromise } = require('./azureTableService');
 
 const manageCodeSamplesAsync = manageCodeSamplesAsyncFactory({
-    getCodeSampleInfoAsync,
+    getCodeSampleInfoPromise,
     upsertCodeSamplesItemAsync,
     kenticoCloudService,
 });
 
 function manageCodeSamplesAsyncFactory(deps) {
     return async function (codeSampleItemCodename) {
-        const codeSampleItemsInfo = await deps.getCodeSampleInfoAsync(codeSampleItemCodename);
+        const codeSampleItemsInfo = await deps.getCodeSampleInfoPromise(codeSampleItemCodename);
 
         const notArchivedCodeSamplesLinkedItems = codeSampleItemsInfo
             .filter(entity => entity.Status._ === ACTIVE_CODE_SAMPLE_INFO);

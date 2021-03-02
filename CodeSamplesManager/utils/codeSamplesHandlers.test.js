@@ -8,7 +8,7 @@ describe('CodeSamplesHandlers', () => {
                 archiveItemVariantAsync: jest.fn(),
             };
             const mockDependencies = {
-                getCodeSampleInfoAsync: () => [
+                getCodeSampleInfoPromise: () => [
                     { Status: { _: 'archived' }, RowKey: { _: `${codename}_rest` } },
                     { Status: { _: 'archived' }, RowKey: { _: `${codename}_net` } },
                     { Status: { _: 'archived' }, RowKey: { _: `${codename}_java` } },
@@ -34,7 +34,7 @@ describe('CodeSamplesHandlers', () => {
                 archiveItemVariantAsync: jest.fn(),
             };
             const mockDependencies = {
-                getCodeSampleInfoAsync: () => [
+                getCodeSampleInfoPromise: () => [
                     { Status: { _: 'active' }, RowKey: { _: `${codename}_rest` } },
                     { Status: { _: 'archived' }, RowKey: { _: `${codename}_net` } },
                     { Status: { _: 'archived' }, RowKey: { _: `${codename}_java` } },
@@ -60,7 +60,7 @@ describe('CodeSamplesHandlers', () => {
                 archiveItemVariantAsync: jest.fn(),
             };
             const mockDependencies = {
-                getCodeSampleInfoAsync: () => [
+                getCodeSampleInfoPromise: () => [
                     { Status: { _: 'active' }, RowKey: { _: `${codename}_rest` } },
                     { Status: { _: 'active' }, RowKey: { _: `${codename}_net` } },
                     { Status: { _: 'archived' }, RowKey: { _: `${codename}_java` } },

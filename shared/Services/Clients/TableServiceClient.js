@@ -5,7 +5,7 @@ const {
 const Configuration = require('./../../external/configuration');
 const { CODE_SAMPLE_INFO_TABLE } = require('../../utils/constants');
 
-async function deleteCodeSampleInfoAsync(resolve, reject, codeSampleInfo) {
+function deleteCodeSampleInfo(resolve, reject, codeSampleInfo) {
     const tableService = getAzureTableService(Configuration.azureConnectionString);
 
     tableService.deleteEntity(
@@ -15,7 +15,7 @@ async function deleteCodeSampleInfoAsync(resolve, reject, codeSampleInfo) {
     );
 }
 
-async function queryCodeSampleInfoAsync(resolve, reject, query) {
+function queryCodeSampleInfo(resolve, reject, query) {
     const tableService = getAzureTableService(Configuration.azureConnectionString);
 
     tableService.queryEntities(
@@ -32,7 +32,7 @@ async function queryCodeSampleInfoAsync(resolve, reject, query) {
     );
 }
 
-async function upsertCodeSampleInfoAsync(resolve, reject, codeSampleInfo) {
+function upsertCodeSampleInfoPromise(resolve, reject, codeSampleInfo) {
     const tableService = getAzureTableService(Configuration.azureConnectionString);
 
     tableService.insertOrReplaceEntity(
@@ -43,7 +43,7 @@ async function upsertCodeSampleInfoAsync(resolve, reject, codeSampleInfo) {
 }
 
 module.exports = {
-    deleteCodeSampleInfoAsync,
-    queryCodeSampleInfoAsync,
-    upsertCodeSampleInfoAsync,
+    deleteCodeSampleInfo,
+    queryCodeSampleInfo,
+    upsertCodeSampleInfoPromise,
 };
