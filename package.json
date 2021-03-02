@@ -17,24 +17,24 @@
   },
   "homepage": "https://github.com/KenticoDocs/kontent-docs-samples-manager#readme",
   "dependencies": {
-    "axios": "0.19.0",
-    "azure-eventgrid": "1.5.0",
-    "azure-storage": "2.10.2",
-    "durable-functions": "1.1.4",
+    "axios": "0.21.1",
+    "azure-eventgrid": "1.6.0",
+    "azure-storage": "2.10.3",
+    "durable-functions": "1.4.6",
     "@kentico/kontent-management": "0.4.8",
-    "ms-rest-azure": "2.6.0",
+    "ms-rest-azure": "3.0.0",
     "rxjs": "6.6.6",
     "url": "0.11.0",
-    "uuid": "3.3.2"
+    "uuid": "8.3.2"
   },
   "devDependencies": {
-    "eslint": "5.13.0",
-    "eslint-config-standard": "12.0.0",
-    "eslint-plugin-import": "2.16.0",
-    "eslint-plugin-jest": "22.2.2",
-    "eslint-plugin-node": "8.0.1",
-    "eslint-plugin-promise": "4.0.1",
-    "eslint-plugin-standard": "4.0.0",
-    "jest": "23.6.0"
+    "eslint": "7.21.0",
+    "eslint-config-standard": "16.0.2",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-jest": "24.1.5",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "4.3.1",
+    "eslint-plugin-standard": "5.0.0",
+    "jest": "26.6.3"
   }
 }
