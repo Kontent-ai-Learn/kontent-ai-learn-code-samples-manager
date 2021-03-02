@@ -4,7 +4,8 @@
   "description": "Kentico Kontent documentation - Samples Manager",
   "scripts": {
     "test": "jest",
-    "eslint": "npx eslint ."
+    "eslint": "npx eslint .",
+    "eslint:fix": "npx eslint . --fix"
   },
   "repository": {
     "type": "git",
