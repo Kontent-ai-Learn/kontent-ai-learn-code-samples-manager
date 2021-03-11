@@ -27,7 +27,7 @@ const codeSampleItemOutOfGroup = {
     platform: 'js',
 };
 
-describe('getGroupedBy ', () => {
+describe('getGroupedBy', () => {
     it('should return correctly grouped code sample items', () => {
         const codeSamplesItems = [
             firstCodeSampleItemOfGroup,

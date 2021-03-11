@@ -1,4 +1,4 @@
-const getUuid = require('uuid');
+const getUuid = require('uuid').v4;
 
 function publishEventsCreator(dependencies) {
     return async function (events) {

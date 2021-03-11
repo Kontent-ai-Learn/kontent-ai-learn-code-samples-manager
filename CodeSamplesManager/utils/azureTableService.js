@@ -5,62 +5,58 @@ const {
     ARCHIVED_CODE_SAMPLE_INFO,
 } = require('../../shared/utils/constants');
 
-function upsertCodeSampleInfoAsync(codename, identifier) {
+function upsertCodeSampleInfoPromise(codename, identifier) {
     const codeSampleInfo = prepareCodeSampleInfo(
         identifier,
         codename,
         ACTIVE_CODE_SAMPLE_INFO,
     );
 
-    return executeCodeSampleInfoModification(
+    return executeCodeSampleInfoModificationPromise(
         codeSampleInfo,
-        tableServiceClient.upsertCodeSampleInfoAsync,
+        tableServiceClient.upsertCodeSampleInfoPromise,
     );
 }
 
-function archiveCodeSampleInfoAsync(codename, identifier) {
+function archiveCodeSampleInfoPromise(codename, identifier) {
     const codeSampleInfo = prepareCodeSampleInfo(
         identifier,
         codename,
         ARCHIVED_CODE_SAMPLE_INFO,
     );
 
-    return executeCodeSampleInfoModification(
+    return executeCodeSampleInfoModificationPromise(
         codeSampleInfo,
-        tableServiceClient.upsertCodeSampleInfoAsync,
+        tableServiceClient.upsertCodeSampleInfoPromise,
     )
 }
 
-function getCodeSampleInfoAsync(identifier) {
-    return executeQueryCodeSampleInfo(identifier);
-}
-
-function executeCodeSampleInfoModification(codeSampleInfo, modificationFunction) {
-    return new Promise(async (resolve, reject) => {
-        await modificationFunction(resolve, reject, codeSampleInfo);
-    });
-}
-
-function executeQueryCodeSampleInfo(identifier) {
-    return new Promise(async (resolve, reject) => {
+function getCodeSampleInfoPromise(identifier) {
+    return new Promise((resolve, reject) => {
         const query = new azure
             .TableQuery()
             .where('PartitionKey eq ?', identifier);
 
-        await tableServiceClient.queryCodeSampleInfoAsync(resolve, reject, query);
+        tableServiceClient.queryCodeSampleInfo(resolve, reject, query);
+    });
+}
+
+function executeCodeSampleInfoModificationPromise(codeSampleInfo, modificationFunction) {
+    return new Promise((resolve, reject) => {
+        modificationFunction(resolve, reject, codeSampleInfo);
     });
 }
 
 function prepareCodeSampleInfo(identifier, codename, status) {
     return {
-        PartitionKey: { '_': identifier },
-        RowKey: { '_': codename },
-        Status: { '_': status },
+        PartitionKey: { _: identifier },
+        RowKey: { _: codename },
+        Status: { _: status },
     };
 }
 
 module.exports = {
-    upsertCodeSampleInfoAsync,
-    archiveCodeSampleInfoAsync,
-    getCodeSampleInfoAsync,
+    upsertCodeSampleInfoPromise,
+    archiveCodeSampleInfoPromise,
+    getCodeSampleInfoPromise,
 };

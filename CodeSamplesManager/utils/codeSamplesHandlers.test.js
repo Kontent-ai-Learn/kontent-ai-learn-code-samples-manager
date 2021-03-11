@@ -8,10 +8,10 @@ describe('CodeSamplesHandlers', () => {
                 archiveItemVariantAsync: jest.fn(),
             };
             const mockDependencies = {
-                getCodeSampleInfoAsync: () => [
-                    { Status: { '_': 'archived' }, RowKey: { '_': `${codename}_rest` } },
-                    { Status: { '_': 'archived' }, RowKey: { '_': `${codename}_net` } },
-                    { Status: { '_': 'archived' }, RowKey: { '_': `${codename}_java` } },
+                getCodeSampleInfoPromise: () => [
+                    { Status: { _: 'archived' }, RowKey: { _: `${codename}_rest` } },
+                    { Status: { _: 'archived' }, RowKey: { _: `${codename}_net` } },
+                    { Status: { _: 'archived' }, RowKey: { _: `${codename}_java` } },
                 ],
                 upsertCodeSamplesItemAsync: jest.fn(),
                 kenticoCloudService: mockService,
@@ -34,10 +34,10 @@ describe('CodeSamplesHandlers', () => {
                 archiveItemVariantAsync: jest.fn(),
             };
             const mockDependencies = {
-                getCodeSampleInfoAsync: () => [
-                    { Status: { '_': 'active' }, RowKey: { '_': `${codename}_rest` } },
-                    { Status: { '_': 'archived' }, RowKey: { '_': `${codename}_net` } },
-                    { Status: { '_': 'archived' }, RowKey: { '_': `${codename}_java` } },
+                getCodeSampleInfoPromise: () => [
+                    { Status: { _: 'active' }, RowKey: { _: `${codename}_rest` } },
+                    { Status: { _: 'archived' }, RowKey: { _: `${codename}_net` } },
+                    { Status: { _: 'archived' }, RowKey: { _: `${codename}_java` } },
                 ],
                 upsertCodeSamplesItemAsync: jest.fn(),
                 kenticoCloudService: mockService,
@@ -60,10 +60,10 @@ describe('CodeSamplesHandlers', () => {
                 archiveItemVariantAsync: jest.fn(),
             };
             const mockDependencies = {
-                getCodeSampleInfoAsync: () => [
-                    { Status: { '_': 'active' }, RowKey: { '_': `${codename}_rest` } },
-                    { Status: { '_': 'active' }, RowKey: { '_': `${codename}_net` } },
-                    { Status: { '_': 'archived' }, RowKey: { '_': `${codename}_java` } },
+                getCodeSampleInfoPromise: () => [
+                    { Status: { _: 'active' }, RowKey: { _: `${codename}_rest` } },
+                    { Status: { _: 'active' }, RowKey: { _: `${codename}_net` } },
+                    { Status: { _: 'archived' }, RowKey: { _: `${codename}_java` } },
                 ],
                 upsertCodeSamplesItemAsync: jest.fn(),
                 kenticoCloudService: mockService,

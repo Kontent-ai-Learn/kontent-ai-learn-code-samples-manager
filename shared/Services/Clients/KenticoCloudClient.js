@@ -51,7 +51,9 @@ function upsertVariantAsync(codename, variant) {
         .upsertLanguageVariant()
         .byItemCodename(codename)
         .byLanguageId(DEFAULT_LANGUAGE_ID)
-        .withElements(variant)
+        .withData(builder => {
+            return variant;
+        })
         .toPromise();
 }
 

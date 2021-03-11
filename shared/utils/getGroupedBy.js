@@ -1,6 +1,6 @@
 function getGroupedBy(elements, key) {
-    let groups = {};
-    let result = [];
+    const groups = {};
+    const result = [];
 
     for (const element of elements) {
         if (!(element[key] in groups)) {

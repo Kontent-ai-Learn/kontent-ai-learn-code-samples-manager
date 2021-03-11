@@ -1,14 +1,17 @@
 const Configuration = require('../external/configuration');
-const { ContentManagementClient } = require('kentico-cloud-content-management');
+const { ManagementClient } = require('@kentico/kontent-management');
 
 function getContentManagementClient() {
-    return new ContentManagementClient({
+    return new ManagementClient({
         projectId: Configuration.kenticoProjectId,
         apiKey: Configuration.kenticoContentManagementApiKey,
-        /* Ensures we don't hit the requests per minute API limit */
-        retryAttempts: 9,
-        /* To ensure we retry correct refused requests. */
-        retryStatusCodes: [408, 429, 500, 502, 503, 504],
+        retryStrategy: {
+            addJitter: true,
+            canRetryError: () => true, // retry all errors
+            maxAttempts: 9,
+            deltaBackoffMs: 1000,
+            maxCumulativeWaitTimeMs: 180000 // 3 minutes
+        }
     });
 }
 
