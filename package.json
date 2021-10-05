@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/KenticoDocs/kontent-docs-samples-manager#readme",
   "dependencies": {
-    "axios": "0.21.1",
+    "axios": "0.21.2",
     "azure-eventgrid": "1.6.0",
     "azure-storage": "2.10.3",
     "durable-functions": "1.4.6",
