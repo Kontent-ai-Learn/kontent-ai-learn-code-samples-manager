@@ -1,6 +1,5 @@
-| [master](https://github.com/KenticoDocs/kontent-docs-samples-manager/tree/master) | [develop](https://github.com/KenticoDocs/kontent-docs-samples-manager/tree/develop) |
-|:---:|:---:|
-[![Build Status](https://travis-ci.com/KenticoDocs/kontent-docs-samples-manager.svg?branch=master)](https://travis-ci.com/KenticoDocs/kontent-docs-samples-manager/branches) [![codebeat badge](https://codebeat.co/badges/2e8300ad-7645-47f0-bc70-8cadccfc03f9)](https://codebeat.co/projects/github-com-kenticodocs-kontent-docs-samples-manager-master) | [![Build Status](https://travis-ci.com/KenticoDocs/kontent-docs-samples-manager.svg?branch=develop)](https://travis-ci.com/KenticoDocs/kontent-docs-samples-manager/branches) [![codebeat badge](https://codebeat.co/badges/744fc3a5-4e68-4855-be0f-1f18363aabb5)](https://codebeat.co/projects/github-com-kenticodocs-kontent-docs-samples-manager-develop) |
+![master](https://github.com/KenticoDocs/kontent-docs-samples-manager/actions/workflows/master_kcd-samples-manager-live-master.yml/badge.svg)
+![develop](https://github.com/KenticoDocs/kontent-docs-samples-manager/actions/workflows/develop_kcd-samples-manager-live-dev.yml/badge.svg)
 
 # Kentico Kontent Documentation - Samples Manager
 Backend service for Kentico Kontent [documentation portal](https://docs.kontent.ai/), which utilizes Kentico Kontent as a source of its data.
