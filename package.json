@@ -18,17 +18,18 @@
   },
   "homepage": "https://github.com/KenticoDocs/kontent-docs-samples-manager#readme",
   "dependencies": {
-    "axios": "0.21.1",
+    "axios": "0.24.0",
     "azure-eventgrid": "1.6.0",
-    "azure-storage": "2.10.3",
-    "durable-functions": "1.4.6",
+    "azure-storage": "2.10.5",
+    "durable-functions": "1.5.3",
     "@kentico/kontent-management": "0.4.8",
-    "ms-rest-azure": "3.0.0",
+    "ms-rest-azure": "3.0.1",
     "rxjs": "6.6.6",
     "url": "0.11.0",
     "uuid": "8.3.2"
   },
   "devDependencies": {
+    "@azure/functions": "3.0.0",
     "eslint": "7.21.0",
     "eslint-config-standard": "16.0.2",
     "eslint-plugin-import": "2.22.1",
