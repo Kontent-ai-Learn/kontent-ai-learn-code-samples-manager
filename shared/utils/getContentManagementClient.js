@@ -6,11 +6,11 @@ function getContentManagementClient() {
         projectId: Configuration.kenticoProjectId,
         apiKey: Configuration.kenticoContentManagementApiKey,
         retryStrategy: {
-            addJitter: true,
+            addJitter: false,
             canRetryError: () => true, // retry all errors
             maxAttempts: 3,
-            deltaBackoffMs: 1000,
-            maxCumulativeWaitTimeMs: 30000 
+            deltaBackoffMs: 200,
+            maxCumulativeWaitTimeMs: 15000 
         }
     });
 }
