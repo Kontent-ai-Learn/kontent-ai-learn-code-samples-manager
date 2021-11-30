@@ -6,26 +6,35 @@ const {
 } = require('./utils/codeSampleHandlers');
 
 module.exports = async function (context) {
+    context.log(`Starting`);
     const codeFragments = context.bindingData.codeFragments;
     Configuration.setupKenticoKontent();
 
+    context.log(`Code fragments (${codeFragments.length})`, codeFragments);
+
     for (const codeFragment of codeFragments) {
-        await processCodeSampleItem(codeFragment);
+        context.log(`Processing code fragment '${codeFragment}' started`);
+        await processCodeSampleItem(context, codeFragment);
+        context.log(`Processing code fragment '${codeFragment}' finished`);
     }
 };
 
-async function processCodeSampleItem(codeFragment) {
+async function processCodeSampleItem(context, codeFragment) {
     try {
+        context.log(`Code fragment status '${codeFragment.status}'`);
         switch (codeFragment.status) {
             case 'added':
+                context.log(`Adding code sample`);
                 await addCodeSampleAsync(codeFragment);
                 break;
 
             case 'modified':
+                context.log(`Updating code sample`);
                 await upsertCodeSampleVariantAsync(codeFragment);
                 break;
 
             case 'deleted':
+                context.log(`Deleting code sample`);
                 await archiveCodeSampleVariantAsync(codeFragment.codename);
                 break;
 
