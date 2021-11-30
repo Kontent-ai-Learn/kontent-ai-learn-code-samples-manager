@@ -7,6 +7,7 @@ module.exports = async function (context, eventGridEvent) {
         undefined,
         eventGridEvent.data.url);
 
+        // 2
     context.log(`Started orchestration with ID = '${instanceId}'.`);
 
     return client.createCheckStatusResponse(context.bindingData.eventGridEvent, instanceId);
