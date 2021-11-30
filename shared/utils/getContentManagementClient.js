@@ -8,9 +8,9 @@ function getContentManagementClient() {
         retryStrategy: {
             addJitter: true,
             canRetryError: () => true, // retry all errors
-            maxAttempts: 1,
+            maxAttempts: 3,
             deltaBackoffMs: 1000,
-            maxCumulativeWaitTimeMs: 10000 
+            maxCumulativeWaitTimeMs: 30000 
         }
     });
 }
