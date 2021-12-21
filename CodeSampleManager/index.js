@@ -4,6 +4,7 @@ const {
     upsertCodeSampleVariantAsync,
     archiveCodeSampleVariantAsync,
 } = require('./utils/codeSampleHandlers');
+const StackTrace = require('stacktrace-js');
 
 module.exports = async function (context) {
     context.log(`Starting`);

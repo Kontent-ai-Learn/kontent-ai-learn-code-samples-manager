@@ -1,6 +1,7 @@
 const Configuration = require('../shared/external/configuration');
 const { manageCodeSamplesAsync } = require('./utils/codeSamplesHandlers');
 const { manageCodeSampleInfoAsync } = require('./utils/codeSamplesInfoServices');
+const StackTrace = require('stacktrace-js');
 
 module.exports = async function (context) {
     context.log(`Starting`);

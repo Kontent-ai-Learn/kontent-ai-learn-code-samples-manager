@@ -1,5 +1,6 @@
 const Configuration = require("../shared/external/configuration");
 const { deleteAllEntities } = require("./Services/azureTableService");
+const StackTrace = require('stacktrace-js');
 
 module.exports = async function () {
   try {
