@@ -1,6 +1,6 @@
 const Configuration = require("../shared/external/configuration");
 const { deleteAllEntities } = require("./Services/azureTableService");
-const StackTrace = require('stacktrace-js');
+const StackTrace = require("stacktrace-js");
 
 module.exports = async function () {
   try {
@@ -8,8 +8,15 @@ module.exports = async function () {
     await deleteAllEntities();
   } catch (error) {
     /** This try-catch is required for correct logging of exceptions in Azure */
+
+    const stacktrace = (await StackTrace.fromError(error))
+      .map((sf) => {
+        return sf.toString();
+      })
+      .join("\n");
+
     throw `message: ${error.message},
-                stack: ${error.stack} ${StackTrace.getSync()},
+                stack: ${error.stack} ${stacktrace},
                 codename: ${codeFragment.codename}`;
   }
 };
