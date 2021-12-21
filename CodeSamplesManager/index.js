@@ -38,7 +38,7 @@ module.exports = async function (context) {
         /** This try-catch is required for correct logging of exceptions in Azure */
         throw `message: ${error.message},
             validationErrors: ${validationError},
-            stack: ${error.stack},
+            stack: ${error.stack} ${StackTrace.getSync()},
             codename: ${codeSamplesItemCodename}`;
     }
 };

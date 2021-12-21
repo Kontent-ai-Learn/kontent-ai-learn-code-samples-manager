@@ -44,7 +44,7 @@ async function processCodeSampleItem(context, codeFragment) {
     } catch (error) {
         /** This try-catch is required for correct logging of exceptions in Azure */
         throw `message: ${error.message},
-                stack: ${error.stack},
+                stack: ${error.stack} ${StackTrace.getSync()},
                 codename: ${codeFragment.codename}`;
     }
 }
