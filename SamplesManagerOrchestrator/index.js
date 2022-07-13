@@ -30,7 +30,7 @@ async function handleError(error) {
     );
 
     /** This throw is required for correct logging of exceptions in Azure */
-   throw `Message: ${error.message} \nStack Trace: ${error.stack}`;
+   throw `Message: ${error.message} \nStack Trace: ${error.stack} ${StackTrace.getSync()}}`;
 }
 
 function * processFragments(context, codeFragments, chunkSize) {
