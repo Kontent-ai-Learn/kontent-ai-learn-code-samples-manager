@@ -32,8 +32,9 @@ module.exports = async function (context) {
   } catch (error) {
     let validationError = "";
 
+    context.log("ERROR: ", error);
     if (error.validationErrors) {
-      validationError = error.validationErrors.map(m).join(", ");
+      validationError = error.validationErrors.map((m) => m).join(", ");
     }
 
     const stacktrace = (await StackTrace.fromError(error))

@@ -1,82 +1,103 @@
-const { ACTIVE_CODE_SAMPLE_INFO } = require('../../shared/utils/constants');
-const kenticoCloudService = require('../../shared/Services');
-const { getCodeSampleInfoPromise } = require('./azureTableService');
+const { ACTIVE_CODE_SAMPLE_INFO } = require("../../shared/utils/constants");
+const kenticoCloudService = require("../../shared/Services");
+const { getCodeSampleInfoPromise } = require("./azureTableService");
 
 const manageCodeSamplesAsync = manageCodeSamplesAsyncFactory({
-    getCodeSampleInfoPromise,
-    upsertCodeSamplesItemAsync,
-    kenticoCloudService,
+  getCodeSampleInfoPromise,
+  upsertCodeSamplesItemAsync,
+  kenticoCloudService,
 });
 
 function manageCodeSamplesAsyncFactory(deps) {
-    return async function (codeSampleItemCodename) {
-        const codeSampleItemsInfo = await deps.getCodeSampleInfoPromise(codeSampleItemCodename);
+  return async function (codeSampleItemCodename) {
+    console.log("Getting info", codeSampleItemCodename);
+    const codeSampleItemsInfo = await deps.getCodeSampleInfoPromise(
+      codeSampleItemCodename
+    );
 
-        const notArchivedCodeSamplesLinkedItems = codeSampleItemsInfo
-            .filter(entity => entity.Status._ === ACTIVE_CODE_SAMPLE_INFO);
+    console.log("got info", codeSampleItemsInfo);
+    const notArchivedCodeSamplesLinkedItems = codeSampleItemsInfo.filter(
+      (entity) => entity.Status._ === ACTIVE_CODE_SAMPLE_INFO
+    );
 
-        const codeSamplesLinkedItems = codeSampleItemsInfo
-            .map(entity => entity.RowKey._);
+    const codeSamplesLinkedItems = codeSampleItemsInfo.map(
+      (entity) => entity.RowKey._
+    );
 
-        if (codeSamplesLinkedItems.length > 1) {
-            await deps.upsertCodeSamplesItemAsync(codeSampleItemCodename, codeSamplesLinkedItems);
-        }
-
-        if (notArchivedCodeSamplesLinkedItems.length === 0) {
-            await deps.kenticoCloudService.archiveItemVariantAsync(codeSampleItemCodename);
-        }
+    if (codeSamplesLinkedItems.length > 1) {
+      console.log("Upsert", codeSamplesLinkedItems);
+      await deps.upsertCodeSamplesItemAsync(
+        codeSampleItemCodename,
+        codeSamplesLinkedItems
+      );
     }
+
+    if (notArchivedCodeSamplesLinkedItems.length === 0) {
+      await deps.kenticoCloudService.archiveItemVariantAsync(
+        codeSampleItemCodename
+      );
+    }
+  };
 }
 
-async function upsertCodeSamplesItemAsync(codeSampleItemCodename, codeSamplesLinkedItems) {
-    const codeSamplesItem = prepareCodeSamplesItem(codeSampleItemCodename);
+async function upsertCodeSamplesItemAsync(
+  codeSampleItemCodename,
+  codeSamplesLinkedItems
+) {
+  const codeSamplesItem = prepareCodeSamplesItem(codeSampleItemCodename);
 
-    await kenticoCloudService.addItemAsync(
-        codeSampleItemCodename,
-        codeSamplesItem
-    );
+  await kenticoCloudService.addItemAsync(
+    codeSampleItemCodename,
+    codeSamplesItem
+  );
 
-    await upsertCodeSamplesVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems);
+  await upsertCodeSamplesVariantAsync(
+    codeSampleItemCodename,
+    codeSamplesLinkedItems
+  );
 }
 
-async function upsertCodeSamplesVariantAsync(codeSampleItemCodename, codeSamplesLinkedItems) {
-    const codeSamplesVariant = prepareCodeSamplesVariant(codeSamplesLinkedItems);
+async function upsertCodeSamplesVariantAsync(
+  codeSampleItemCodename,
+  codeSamplesLinkedItems
+) {
+  const codeSamplesVariant = prepareCodeSamplesVariant(codeSamplesLinkedItems);
 
-    await kenticoCloudService.upsertVariantAsync(
-        codeSampleItemCodename,
-        codeSamplesVariant,
-    );
+  await kenticoCloudService.upsertVariantAsync(
+    codeSampleItemCodename,
+    codeSamplesVariant
+  );
 }
 
 function prepareCodeSamplesItem(identifier) {
-    return {
-        type: {
-            codename: 'code_samples',
-        },
-        name: identifier,
-        // Delete when CM API v2 update content item end-point will be fixed and sitemap_locations will not be required
-        sitemap_locations: [],
-    };
+  return {
+    type: {
+      codename: "code_samples",
+    },
+    name: identifier,
+    // Delete when CM API v2 update content item end-point will be fixed and sitemap_locations will not be required
+    sitemap_locations: [],
+  };
 }
 
 function prepareCodeSamplesVariant(codenames) {
-    const linkedItems = transformCodenamesToLinkItems(codenames);
+  const linkedItems = transformCodenamesToLinkItems(codenames);
 
-    return [
-        {
-            element: {
-                codename: 'code_samples',
-            },
-            value: linkedItems,
-        },
-    ];
+  return [
+    {
+      element: {
+        codename: "code_samples",
+      },
+      value: linkedItems,
+    },
+  ];
 }
 
 function transformCodenamesToLinkItems(codenames) {
-    return codenames.map(codename => ({ codename }));
+  return codenames.map((codename) => ({ codename }));
 }
 
 module.exports = {
-    manageCodeSamplesAsync,
-    manageCodeSamplesAsyncFactory,
+  manageCodeSamplesAsync,
+  manageCodeSamplesAsyncFactory,
 };
