@@ -44,11 +44,15 @@ async function processCodeSampleItem(context, codeFragment) {
     }
   } catch (error) {
     /** This try-catch is required for correct logging of exceptions in Azure */
-    const stacktrace = (await StackTrace.fromError(error))
-      .map((sf) => {
-        return sf.toString();
-      })
-      .join("\n");
+    context.log("ERROR", error);
+    let stacktrace = "";
+    try {
+      stacktrace = (await StackTrace.fromError(error))
+        .map((sf) => {
+          return sf.toString();
+        })
+        .join("\n");
+    } catch (stackParseErr) {}
 
     throw `message: ${error.message},
                 stack: ${error.stack} ${stacktrace},

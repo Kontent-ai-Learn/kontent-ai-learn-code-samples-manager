@@ -32,21 +32,24 @@ module.exports = async function (context) {
   } catch (error) {
     let validationError = "";
 
-    context.log("ERROR: ", error);
     if (error.validationErrors) {
       validationError = error.validationErrors.map((m) => m).join(", ");
     }
 
-    const stacktrace = (await StackTrace.fromError(error))
-      .map((sf) => {
-        return sf.toString();
-      })
-      .join("\n");
+    context.log("ERROR", error);
+    let stacktrace = "";
+    try {
+      stacktrace = (await StackTrace.fromError(error))
+        .map((sf) => {
+          return sf.toString();
+        })
+        .join("\n");
+    } catch (stackParseErr) {}
 
     /** This try-catch is required for correct logging of exceptions in Azure */
     throw `message: ${error.message},
             validationErrors: ${validationError},
             stack: ${error.stack} ${stacktrace},
-            codename: ${codeSamplesItemCodename}`;
+           }`;
   }
 };
